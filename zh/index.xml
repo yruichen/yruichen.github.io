@@ -1,7 +1,53 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Yingrui Chen</title><link>https://yruichen.tech/zh/</link><description>Recent content on Yingrui Chen</description><generator>Hugo</generator><language>zh</language><lastBuildDate>Sat, 23 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://yruichen.tech/zh/index.xml" rel="self" type="application/rss+xml"/><item><title>Intelligent Government Service Assistant</title><link>https://yruichen.tech/zh/projects/intelligent-government-assistant/</link><pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate><guid>https://yruichen.tech/zh/projects/intelligent-government-assistant/</guid><description>A Multi-Agent System for digital government tasks.</description></item><item><title>Vibe - AI Fashion Community</title><link>https://yruichen.tech/zh/projects/vibe/</link><pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate><guid>https://yruichen.tech/zh/projects/vibe/</guid><description>An AI-powered fashion community application based on OpenHarmony.</description></item><item><title>Manuscript Submitted to IEEE JBHI</title><link>https://yruichen.tech/zh/research/ieee_jbhi/</link><pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate><guid>https://yruichen.tech/zh/research/ieee_jbhi/</guid><description>&lt;p&gt;Congratulations! The manuscript has been submitted to the IEEE Journal of Biomedical and Health Informatics, Currently, the manuscript is under peer review. I will update this post with the abstract and key methodology once furtherprogress is made.&lt;/p&gt;</description></item><item><title>Fundamentals of Differential Privacy: From Definitions to ML Applications</title><link>https://yruichen.tech/zh/blog/dp_learn/</link><pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate><guid>https://yruichen.tech/zh/blog/dp_learn/</guid><description>This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.</description></item><item><title>A Brief Discussion on Affine Transformations</title><link>https://yruichen.tech/zh/blog/affine_geometry/</link><pubDate>Fri, 08 Mar 2024 00:00:00 +0000</pubDate><guid>https://yruichen.tech/zh/blog/affine_geometry/</guid><description>&lt;p class="post-date" style="font-weight:600;color:#222;margin-bottom:1rem;"&gt;March 8, 2024&lt;/p&gt;
-&lt;h1 id="1-preliminary-knowledge"&gt;1. Preliminary Knowledge&lt;/h1&gt;
-&lt;h2 id="11-about-coordinates"&gt;1.1 About Coordinates&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Yingrui Chen</title>
+    <link>/zh/</link>
+    <description>Recent content on Yingrui Chen</description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <lastBuildDate>Sat, 23 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/zh/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Intelligent Government Service Assistant</title>
+      <link>/zh/projects/intelligent-government-assistant/</link>
+      <pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate>
+      <guid>/zh/projects/intelligent-government-assistant/</guid>
+      <description>A Multi-Agent System for digital government tasks.</description>
+    </item>
+    <item>
+      <title>Vibe - AI Fashion Community</title>
+      <link>/zh/projects/vibe/</link>
+      <pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate>
+      <guid>/zh/projects/vibe/</guid>
+      <description>An AI-powered fashion community application based on OpenHarmony.</description>
+    </item>
+    <item>
+      <title>Manuscript Submitted to IEEE JBHI</title>
+      <link>/zh/research/ieee_jbhi/</link>
+      <pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>/zh/research/ieee_jbhi/</guid>
+      <description>&lt;p&gt;Congratulations! The manuscript has been submitted to the IEEE Journal of Biomedical and Health Informatics, Currently, the manuscript is under peer review. I will update this post with the abstract and key methodology once furtherprogress is made.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Fundamentals of Differential Privacy: From Definitions to ML Applications</title>
+      <link>/zh/blog/dp_learn/</link>
+      <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>/zh/blog/dp_learn/</guid>
+      <description>This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.</description>
+    </item>
+    <item>
+      <title>A Brief Discussion on Affine Transformations</title>
+      <link>/zh/blog/affine_geometry/</link>
+      <pubDate>Fri, 08 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>/zh/blog/affine_geometry/</guid>
+      <description>&lt;p class=&#34;post-date&#34; style=&#34;font-weight:600;color:#222;margin-bottom:1rem;&#34;&gt;March 8, 2024&lt;/p&gt;
+&lt;h1 id=&#34;1-preliminary-knowledge&#34;&gt;1. Preliminary Knowledge&lt;/h1&gt;
+&lt;h2 id=&#34;11-about-coordinates&#34;&gt;1.1 About Coordinates&lt;/h2&gt;
 &lt;p&gt;To describe the position of a point P in the plane xOy we introduce coordinates. For example, how are the coordinates (4, 3) of point P obtained?&lt;/p&gt;
-&lt;img src="./assets/media/image3.png" /&gt;
+&lt;img src=&#34;./assets/media/image3.png&#34; /&gt;
 &lt;p&gt;Intuitively, starting from the origin, P moves 4 units along the positive x-axis and then 3 units along the positive y-axis to reach (4, 3).&lt;/p&gt;
-&lt;p&gt;Alternatively, in terms of vectors, let \overrightarrow{i}, \overrightarrow{j} be an orthonormal basis of the xOy coordinate system. Then&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;Alternatively, in terms of vectors, let \overrightarrow{i}, \overrightarrow{j} be an orthonormal basis of the xOy coordinate system. Then&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

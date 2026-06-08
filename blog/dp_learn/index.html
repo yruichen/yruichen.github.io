@@ -1,37 +1,492 @@
-<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Fundamentals of Differential Privacy: From Definitions to ML Applications | Yingrui Chen</title><meta name=keywords content="Differential Privacy,Privacy Protection,PyTorch"><meta name=description content="This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning."><meta name=author content><link rel=canonical href=https://yruichen.tech/blog/dp_learn/><link crossorigin=anonymous href=/assets/css/stylesheet.7e90f24ecbd09120f98e21b854b5f3bf94d92e85ac5b254a9af6ebc3316e8b76.css integrity="sha256-fpDyTsvQkSD5jiG4VLXzv5TZLoWsWyVKmvbrwzFui3Y=" rel="preload stylesheet" as=style><link rel=icon href=https://yruichen.tech/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://yruichen.tech/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://yruichen.tech/favicon-32x32.png><link rel=apple-touch-icon href=https://yruichen.tech/apple-touch-icon.png><link rel=mask-icon href=https://yruichen.tech/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://yruichen.tech/blog/dp_learn/><link rel=alternate hreflang=zh href=https://yruichen.tech/zh/blog/dp_learn/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js></script><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js onload=renderMathInElement(document.body)></script><script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1}]})})</script><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel=stylesheet><meta property="og:url" content="https://yruichen.tech/blog/dp_learn/"><meta property="og:site_name" content="Yingrui Chen"><meta property="og:title" content="Fundamentals of Differential Privacy: From Definitions to ML Applications"><meta property="og:description" content="This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="blog"><meta property="article:published_time" content="2025-07-08T00:00:00+00:00"><meta property="article:modified_time" content="2025-07-08T00:00:00+00:00"><meta property="article:tag" content="Differential Privacy"><meta property="article:tag" content="Privacy Protection"><meta property="article:tag" content="PyTorch"><meta property="og:image" content="https://yruichen.tech/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://yruichen.tech/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w.png"><meta name=twitter:title content="Fundamentals of Differential Privacy: From Definitions to ML Applications"><meta name=twitter:description content="This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Blog","item":"https://yruichen.tech/blog/"},{"@type":"ListItem","position":2,"name":"Fundamentals of Differential Privacy: From Definitions to ML Applications","item":"https://yruichen.tech/blog/dp_learn/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Fundamentals of Differential Privacy: From Definitions to ML Applications","name":"Fundamentals of Differential Privacy: From Definitions to ML Applications","description":"This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.","keywords":["Differential Privacy","Privacy Protection","PyTorch"],"articleBody":"July 8, 2025\nIntroduction With the proliferation of intelligent devices, data volume has grown explosively, providing rich training material for machine learning. However, training datasets often contain sensitive information and therefore pose serious privacy risks. For example, membership inference attacks can infer whether an individual’s data was used to train a model.\nIn IoT settings, federated learning keeps raw data local, but research shows that exchanged model updates (gradients) can still leak information. Traditional cryptographic methods are often too computationally heavy for realtime training. Differential Privacy (DP) offers mathematically provable privacy guarantees by introducing calibrated randomness, making it a mainstream approach to balance data utility and privacy.\n1. Core Concepts of Differential Privacy DP does not protect a dataset as a whole; rather, it protects individuals’ participation. It ensures that any single record has a limited influence on the algorithm’s output, so an observer cannot confidently infer whether a given individual was included in the dataset.\n1.1 Formal Definition For a randomized algorithm $M$, and any pair of neighboring datasets $D$ and $D’$ (differing in one record), for every measurable subset $S_m$ of outputs,\n$$\\Pr[M(D) \\in S_m] \\le e^{\\epsilon} \\Pr[M(D’) \\in S_m] + \\delta.$$\nIf this holds, $M$ satisfies $(\\epsilon,\\delta)$-differential privacy. Here $\\epsilon$ is the privacy budget (smaller $\\epsilon$ means stronger privacy but lower utility) and $\\delta$ is the small failure probability that allows rare deviations.\nFigure 1: Proximity of output distributions for neighboring datasets under mechanism M.\n2. Sensitivity and Noise Mechanisms DP works by adding noise to query outputs; the noise scale depends on the function’s sensitivity.\n2.1 Global Sensitivity For a function $f:D\\to R$, the global sensitivity is\n$$\\Delta f = \\max_{D,D’} |f(D)-f(D’)|_1,$$\nrepresenting the maximum change in the output when one record is modified.\n2.2 Laplace Mechanism The Laplace mechanism adds noise drawn from Laplace$(\\Delta f/\\epsilon)$. For illustration:\n1 2 3 4 5 6 7 8 9 10 11 12 import matplotlib.pyplot as plt import numpy as np def laplacian_pdf(x, mu, b): return 0.5 / b * np.exp(-abs(x - mu) / b) x = np.linspace(-10, 10, 1000) plt.plot(x, laplacian_pdf(x, 0, 1), label='mu=0, b=1') plt.plot(x, laplacian_pdf(x, 0, 2), label='mu=0, b=2') plt.legend() plt.title(\"Laplacian PDF under different parameters\") plt.show() 3. Non-numeric Outputs: The Exponential Mechanism When outputs are categorical or non-numeric (e.g., selecting a winner among candidates), use the Exponential Mechanism. It relies on a utility function $q(D,r)$ and samples candidate $r$ with probability proportional to\n$$\\exp\\left(\\frac{\\epsilon, q(D,r)}{2\\Delta q}\\right),$$\nwhere $\\Delta q$ is the sensitivity of the utility function.\nExample: robust voting system — even if an attacker controls many voters, the randomized selection induced by the exponential mechanism prevents perfect inference about any single voter’s choice.\n4. Differential Privacy in Machine Learning In machine learning, DP is typically applied during optimization. DP-SGD modifies gradient descent by clipping per-example gradients and adding noise, preventing the model from memorizing specific examples.\nFigure 2: Model inversion — attacker attempts to reconstruct training data from model parameters.\n4.1 PyTorch Experiment (Opacus) Using Opacus on MNIST, comparing standard training vs DP-SGD yields results like:\nSetup Accuracy Privacy Strength Normal SGD 96.27% Weak (vulnerable to membership inference) DP-SGD 89.16% Strong ($\\epsilon=2.0$) Introducing DP typically reduces predictive accuracy because noisy gradients perturb the optimization direction. Practical work requires tuning $\\epsilon$ and the noise multiplier to balance privacy and utility.\n5. Summary and Perspectives Differential Privacy provides rigorous privacy guarantees, but the utility–privacy trade-off remains a central challenge. Future research directions include:\nImproved noise distributions to reduce impact on convergence for large models (e.g., LLMs). Adaptive sensitivity control that dynamically allocates privacy budget across training rounds. Choosing privacy parameters is both a technical and an ethical decision: it requires balancing model performance and users’ privacy rights.\nReferences [1] Xin Bangzhou. Research on Differential Privacy Techniques in Machine Learning [D]. University of Science and Technology of China, 2022.\n[2] Li Xiaoguang, Li Hui, et al. A Survey on Differential Privacy [J]. Journal of Information Security, 2018.\n","wordCount":"649","inLanguage":"en","image":"https://yruichen.tech/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w.png","datePublished":"2025-07-08T00:00:00Z","dateModified":"2025-07-08T00:00:00Z","mainEntityOfPage":{"@type":"WebPage","@id":"https://yruichen.tech/blog/dp_learn/"},"publisher":{"@type":"Organization","name":"Yingrui Chen","logo":{"@type":"ImageObject","url":"https://yruichen.tech/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://yruichen.tech/ accesskey=h title="Yingrui Chen (Alt + H)">Yingrui Chen</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
-<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-</button><span class=nav-sep>|</span><ul class=lang-menu><li><a href=https://yruichen.tech/zh/ title=Zh aria-label=Zh>Zh</a></li></ul></div></div><ul id=menu class=menu><li><a href=https://yruichen.tech/research title=Research><span>Research</span></a></li><li><a href=https://yruichen.tech/blog title=Blog><span>Blog</span></a></li><li><a href=https://yruichen.tech/projects title=Projects><span>Projects</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><nav class=breadcrumbs role=navigation aria-label=Breadcrumb><a href=/>Home</a>
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg>
-<a href=/blog/>Blog</a>
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg></nav><h1 class="post-title entry-hint-parent">Fundamentals of Differential Privacy: From Definitions to ML Applications</h1><div class=post-description>This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.</div><div class=post-meta><span title='2025-07-08 00:00:00 +0000 UTC'>July 8, 2025</span>&nbsp;·&nbsp;<span>4 min</span>&nbsp;|&nbsp;<span>Translations:</span><ul class=i18n_list><li><a href=https://yruichen.tech/zh/blog/dp_learn/>Zh</a></li></ul></div></header><figure class=entry-cover><img loading=eager srcset='https://yruichen.tech/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w_hu_7e7f65a8c4ca7be2.png 360w,https://yruichen.tech/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w_hu_18f99f49f613d144.png 480w,https://yruichen.tech/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w_hu_44094ec47fb43af9.png 720w,https://yruichen.tech/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w_hu_7abeec7cd3017f31.png 1080w,https://yruichen.tech/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w.png 1156w' src=https://yruichen.tech/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w.png sizes="(min-width: 768px) 720px, 100vw" width=1156 height=908 alt="Differential Privacy Concept"></figure><div class="post-content md-content"><p class=post-date style=font-weight:600;color:#222;margin-bottom:1rem>July 8, 2025</p><h2 id=introduction>Introduction<a hidden class=anchor aria-hidden=true href=#introduction>#</a></h2><p>With the proliferation of intelligent devices, data volume has grown explosively, providing rich training material for machine learning. However, training datasets often contain sensitive information and therefore pose serious privacy risks. For example, membership inference attacks can infer whether an individual&rsquo;s data was used to train a model.</p><p>In IoT settings, federated learning keeps raw data local, but research shows that exchanged model updates (gradients) can still leak information. Traditional cryptographic methods are often too computationally heavy for realtime training. Differential Privacy (DP) offers mathematically provable privacy guarantees by introducing calibrated randomness, making it a mainstream approach to balance data utility and privacy.</p><hr><h2 id=1-core-concepts-of-differential-privacy>1. Core Concepts of Differential Privacy<a hidden class=anchor aria-hidden=true href=#1-core-concepts-of-differential-privacy>#</a></h2><p>DP does not protect a dataset as a whole; rather, it protects individuals&rsquo; participation. It ensures that any single record has a limited influence on the algorithm&rsquo;s output, so an observer cannot confidently infer whether a given individual was included in the dataset.</p><h3 id=11-formal-definition>1.1 Formal Definition<a hidden class=anchor aria-hidden=true href=#11-formal-definition>#</a></h3><p>For a randomized algorithm $M$, and any pair of neighboring datasets $D$ and $D&rsquo;$ (differing in one record), for every measurable subset $S_m$ of outputs,</p><p>$$\Pr[M(D) \in S_m] \le e^{\epsilon} \Pr[M(D&rsquo;) \in S_m] + \delta.$$</p><p>If this holds, $M$ satisfies $(\epsilon,\delta)$-differential privacy. Here $\epsilon$ is the privacy budget (smaller $\epsilon$ means stronger privacy but lower utility) and $\delta$ is the small failure probability that allows rare deviations.</p><p><img alt="DP Concept Graph" loading=lazy src=/blog/dp_learn/images/v2-2f0d7011deea7b91a61892a01473848e_1440w.png>
-<em>Figure 1: Proximity of output distributions for neighboring datasets under mechanism M.</em></p><hr><h2 id=2-sensitivity-and-noise-mechanisms>2. Sensitivity and Noise Mechanisms<a hidden class=anchor aria-hidden=true href=#2-sensitivity-and-noise-mechanisms>#</a></h2><p>DP works by adding noise to query outputs; the noise scale depends on the function&rsquo;s sensitivity.</p><h3 id=21-global-sensitivity>2.1 Global Sensitivity<a hidden class=anchor aria-hidden=true href=#21-global-sensitivity>#</a></h3><p>For a function $f:D\to R$, the global sensitivity is</p><p>$$\Delta f = \max_{D,D&rsquo;} |f(D)-f(D&rsquo;)|_1,$$</p><p>representing the maximum change in the output when one record is modified.</p><h3 id=22-laplace-mechanism>2.2 Laplace Mechanism<a hidden class=anchor aria-hidden=true href=#22-laplace-mechanism>#</a></h3><p>The Laplace mechanism adds noise drawn from Laplace$(\Delta f/\epsilon)$. For illustration:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#ff7b72>import</span> <span style=color:#ff7b72>matplotlib.pyplot</span> <span style=color:#ff7b72>as</span> <span style=color:#ff7b72>plt</span>
-</span></span><span style=display:flex><span><span style=color:#ff7b72>import</span> <span style=color:#ff7b72>numpy</span> <span style=color:#ff7b72>as</span> <span style=color:#ff7b72>np</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#ff7b72>def</span> <span style=color:#d2a8ff;font-weight:700>laplacian_pdf</span>(x, mu, b):
-</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> <span style=color:#a5d6ff>0.5</span> <span style=color:#ff7b72;font-weight:700>/</span> b <span style=color:#ff7b72;font-weight:700>*</span> np<span style=color:#ff7b72;font-weight:700>.</span>exp(<span style=color:#ff7b72;font-weight:700>-</span>abs(x <span style=color:#ff7b72;font-weight:700>-</span> mu) <span style=color:#ff7b72;font-weight:700>/</span> b)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>x <span style=color:#ff7b72;font-weight:700>=</span> np<span style=color:#ff7b72;font-weight:700>.</span>linspace(<span style=color:#ff7b72;font-weight:700>-</span><span style=color:#a5d6ff>10</span>, <span style=color:#a5d6ff>10</span>, <span style=color:#a5d6ff>1000</span>)
-</span></span><span style=display:flex><span>plt<span style=color:#ff7b72;font-weight:700>.</span>plot(x, laplacian_pdf(x, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>1</span>), label<span style=color:#ff7b72;font-weight:700>=</span><span style=color:#a5d6ff>&#39;mu=0, b=1&#39;</span>)
-</span></span><span style=display:flex><span>plt<span style=color:#ff7b72;font-weight:700>.</span>plot(x, laplacian_pdf(x, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>2</span>), label<span style=color:#ff7b72;font-weight:700>=</span><span style=color:#a5d6ff>&#39;mu=0, b=2&#39;</span>)
-</span></span><span style=display:flex><span>plt<span style=color:#ff7b72;font-weight:700>.</span>legend()
-</span></span><span style=display:flex><span>plt<span style=color:#ff7b72;font-weight:700>.</span>title(<span style=color:#a5d6ff>&#34;Laplacian PDF under different parameters&#34;</span>)
-</span></span><span style=display:flex><span>plt<span style=color:#ff7b72;font-weight:700>.</span>show()
-</span></span></code></pre></td></tr></table></div></div><hr><h2 id=3-non-numeric-outputs-the-exponential-mechanism>3. Non-numeric Outputs: The Exponential Mechanism<a hidden class=anchor aria-hidden=true href=#3-non-numeric-outputs-the-exponential-mechanism>#</a></h2><p>When outputs are categorical or non-numeric (e.g., selecting a winner among candidates), use the Exponential Mechanism. It relies on a utility function $q(D,r)$ and samples candidate $r$ with probability proportional to</p><p>$$\exp\left(\frac{\epsilon, q(D,r)}{2\Delta q}\right),$$</p><p>where $\Delta q$ is the sensitivity of the utility function.</p><p><strong>Example: robust voting system</strong> — even if an attacker controls many voters, the randomized selection induced by the exponential mechanism prevents perfect inference about any single voter&rsquo;s choice.</p><hr><h2 id=4-differential-privacy-in-machine-learning>4. Differential Privacy in Machine Learning<a hidden class=anchor aria-hidden=true href=#4-differential-privacy-in-machine-learning>#</a></h2><p>In machine learning, DP is typically applied during optimization. DP-SGD modifies gradient descent by clipping per-example gradients and adding noise, preventing the model from memorizing specific examples.</p><p><img alt="Model Inversion Attack" loading=lazy src=/blog/dp_learn/images/v2-8f23a3cb35f907140e5fdfdd704ff412_1440w.png>
-<em>Figure 2: Model inversion — attacker attempts to reconstruct training data from model parameters.</em></p><h3 id=41-pytorch-experiment-opacus>4.1 PyTorch Experiment (Opacus)<a hidden class=anchor aria-hidden=true href=#41-pytorch-experiment-opacus>#</a></h3><p>Using Opacus on MNIST, comparing standard training vs DP-SGD yields results like:</p><table><thead><tr><th style=text-align:left>Setup</th><th style=text-align:center>Accuracy</th><th style=text-align:left>Privacy Strength</th></tr></thead><tbody><tr><td style=text-align:left>Normal SGD</td><td style=text-align:center>96.27%</td><td style=text-align:left>Weak (vulnerable to membership inference)</td></tr><tr><td style=text-align:left>DP-SGD</td><td style=text-align:center>89.16%</td><td style=text-align:left>Strong ($\epsilon=2.0$)</td></tr></tbody></table><p>Introducing DP typically reduces predictive accuracy because noisy gradients perturb the optimization direction. Practical work requires tuning $\epsilon$ and the noise multiplier to balance privacy and utility.</p><hr><h2 id=5-summary-and-perspectives>5. Summary and Perspectives<a hidden class=anchor aria-hidden=true href=#5-summary-and-perspectives>#</a></h2><p>Differential Privacy provides rigorous privacy guarantees, but the utility–privacy trade-off remains a central challenge. Future research directions include:</p><ol><li>Improved noise distributions to reduce impact on convergence for large models (e.g., LLMs).</li><li>Adaptive sensitivity control that dynamically allocates privacy budget across training rounds.</li></ol><p>Choosing privacy parameters is both a technical and an ethical decision: it requires balancing model performance and users&rsquo; privacy rights.</p><hr><h3 id=references>References<a hidden class=anchor aria-hidden=true href=#references>#</a></h3><p>[1] Xin Bangzhou. Research on Differential Privacy Techniques in Machine Learning [D]. University of Science and Technology of China, 2022.</p><p>[2] Li Xiaoguang, Li Hui, et al. A Survey on Differential Privacy [J]. Journal of Information Security, 2018.</p><hr></div><footer class=post-footer><ul class=post-tags><li><a href=https://yruichen.tech/tags/differential-privacy/>Differential Privacy</a></li><li><a href=https://yruichen.tech/tags/privacy-protection/>Privacy Protection</a></li><li><a href=https://yruichen.tech/tags/pytorch/>PyTorch</a></li></ul></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://yruichen.tech/>Yingrui Chen</a></span> ·
-<span>Powered by
-<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
-<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
-</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Fundamentals of Differential Privacy: From Definitions to ML Applications | Yingrui Chen</title>
+<meta name="keywords" content="Differential Privacy, Privacy Protection, PyTorch">
+<meta name="description" content="This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.">
+<meta name="author" content="">
+<link rel="canonical" href="/blog/dp_learn/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.7e90f24ecbd09120f98e21b854b5f3bf94d92e85ac5b254a9af6ebc3316e8b76.css" integrity="sha256-fpDyTsvQkSD5jiG4VLXzv5TZLoWsWyVKmvbrwzFui3Y=" rel="preload stylesheet" as="style">
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="mask-icon" href="/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="/blog/dp_learn/">
+<link rel="alternate" hreflang="zh" href="/zh/blog/dp_learn/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"><meta property="og:url" content="/blog/dp_learn/">
+  <meta property="og:site_name" content="Yingrui Chen">
+  <meta property="og:title" content="Fundamentals of Differential Privacy: From Definitions to ML Applications">
+  <meta property="og:description" content="This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="blog">
+    <meta property="article:published_time" content="2025-07-08T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-07-08T00:00:00+00:00">
+    <meta property="article:tag" content="Differential Privacy">
+    <meta property="article:tag" content="Privacy Protection">
+    <meta property="article:tag" content="PyTorch">
+    <meta property="og:image" content="/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w.png">
+  <meta name="twitter:title" content="Fundamentals of Differential Privacy: From Definitions to ML Applications">
+  <meta name="twitter:description" content="This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Blog",
+      "item": "/blog/"
+    }
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Fundamentals of Differential Privacy: From Definitions to ML Applications",
+      "item": "/blog/dp_learn/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Fundamentals of Differential Privacy: From Definitions to ML Applications",
+  "name": "Fundamentals of Differential Privacy: From Definitions to ML Applications",
+  "description": "This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.",
+  "keywords": [
+    "Differential Privacy", "Privacy Protection", "PyTorch"
+  ],
+  "articleBody": "July 8, 2025\nIntroduction With the proliferation of intelligent devices, data volume has grown explosively, providing rich training material for machine learning. However, training datasets often contain sensitive information and therefore pose serious privacy risks. For example, membership inference attacks can infer whether an individual’s data was used to train a model.\nIn IoT settings, federated learning keeps raw data local, but research shows that exchanged model updates (gradients) can still leak information. Traditional cryptographic methods are often too computationally heavy for realtime training. Differential Privacy (DP) offers mathematically provable privacy guarantees by introducing calibrated randomness, making it a mainstream approach to balance data utility and privacy.\n1. Core Concepts of Differential Privacy DP does not protect a dataset as a whole; rather, it protects individuals’ participation. It ensures that any single record has a limited influence on the algorithm’s output, so an observer cannot confidently infer whether a given individual was included in the dataset.\n1.1 Formal Definition For a randomized algorithm $M$, and any pair of neighboring datasets $D$ and $D’$ (differing in one record), for every measurable subset $S_m$ of outputs,\n$$\\Pr[M(D) \\in S_m] \\le e^{\\epsilon} \\Pr[M(D’) \\in S_m] + \\delta.$$\nIf this holds, $M$ satisfies $(\\epsilon,\\delta)$-differential privacy. Here $\\epsilon$ is the privacy budget (smaller $\\epsilon$ means stronger privacy but lower utility) and $\\delta$ is the small failure probability that allows rare deviations.\nFigure 1: Proximity of output distributions for neighboring datasets under mechanism M.\n2. Sensitivity and Noise Mechanisms DP works by adding noise to query outputs; the noise scale depends on the function’s sensitivity.\n2.1 Global Sensitivity For a function $f:D\\to R$, the global sensitivity is\n$$\\Delta f = \\max_{D,D’} |f(D)-f(D’)|_1,$$\nrepresenting the maximum change in the output when one record is modified.\n2.2 Laplace Mechanism The Laplace mechanism adds noise drawn from Laplace$(\\Delta f/\\epsilon)$. For illustration:\n1 2 3 4 5 6 7 8 9 10 11 12 import matplotlib.pyplot as plt import numpy as np def laplacian_pdf(x, mu, b): return 0.5 / b * np.exp(-abs(x - mu) / b) x = np.linspace(-10, 10, 1000) plt.plot(x, laplacian_pdf(x, 0, 1), label='mu=0, b=1') plt.plot(x, laplacian_pdf(x, 0, 2), label='mu=0, b=2') plt.legend() plt.title(\"Laplacian PDF under different parameters\") plt.show() 3. Non-numeric Outputs: The Exponential Mechanism When outputs are categorical or non-numeric (e.g., selecting a winner among candidates), use the Exponential Mechanism. It relies on a utility function $q(D,r)$ and samples candidate $r$ with probability proportional to\n$$\\exp\\left(\\frac{\\epsilon, q(D,r)}{2\\Delta q}\\right),$$\nwhere $\\Delta q$ is the sensitivity of the utility function.\nExample: robust voting system — even if an attacker controls many voters, the randomized selection induced by the exponential mechanism prevents perfect inference about any single voter’s choice.\n4. Differential Privacy in Machine Learning In machine learning, DP is typically applied during optimization. DP-SGD modifies gradient descent by clipping per-example gradients and adding noise, preventing the model from memorizing specific examples.\nFigure 2: Model inversion — attacker attempts to reconstruct training data from model parameters.\n4.1 PyTorch Experiment (Opacus) Using Opacus on MNIST, comparing standard training vs DP-SGD yields results like:\nSetup Accuracy Privacy Strength Normal SGD 96.27% Weak (vulnerable to membership inference) DP-SGD 89.16% Strong ($\\epsilon=2.0$) Introducing DP typically reduces predictive accuracy because noisy gradients perturb the optimization direction. Practical work requires tuning $\\epsilon$ and the noise multiplier to balance privacy and utility.\n5. Summary and Perspectives Differential Privacy provides rigorous privacy guarantees, but the utility–privacy trade-off remains a central challenge. Future research directions include:\nImproved noise distributions to reduce impact on convergence for large models (e.g., LLMs). Adaptive sensitivity control that dynamically allocates privacy budget across training rounds. Choosing privacy parameters is both a technical and an ethical decision: it requires balancing model performance and users’ privacy rights.\nReferences [1] Xin Bangzhou. Research on Differential Privacy Techniques in Machine Learning [D]. University of Science and Technology of China, 2022.\n[2] Li Xiaoguang, Li Hui, et al. A Survey on Differential Privacy [J]. Journal of Information Security, 2018.\n",
+  "wordCount" : "649",
+  "inLanguage": "en",
+  "image":"/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w.png","datePublished": "2025-07-08T00:00:00Z",
+  "dateModified": "2025-07-08T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/blog/dp_learn/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Yingrui Chen",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="/" accesskey="h" title="Yingrui Chen (Alt + H)">Yingrui Chen</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button><span class="nav-sep">|</span>
+                    <ul class="lang-menu">
+                        <li>
+                            <a href="/zh/" title="Zh"
+                                aria-label="Zh">Zh</a>
+                        </li>
+                    </ul>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="/research" title="Research">
+                    <span>Research</span>
+                </a>
+            </li>
+            <li>
+                <a href="/blog" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="/projects" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/blog/">Blog</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
+    <h1 class="post-title entry-hint-parent">
+      Fundamentals of Differential Privacy: From Definitions to ML Applications
+    </h1>
+    <div class="post-description">
+      This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.
+    </div>
+    <div class="post-meta">
+
+<span title='2025-07-08 00:00:00 +0000 UTC'>July 8, 2025</span>&nbsp;·&nbsp;<span>4 min</span>&nbsp;|&nbsp;<span>Translations:</span>
+    <ul class="i18n_list">
+        <li>
+            <a href="/zh/blog/dp_learn/">Zh</a>
+        </li>
+    </ul>
+
+</div>
+  </header> 
+<figure class="entry-cover">
+            <img loading="eager"
+                srcset='/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w_hu_7e7f65a8c4ca7be2.png 360w,/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w_hu_18f99f49f613d144.png 480w,/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w_hu_44094ec47fb43af9.png 720w,/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w_hu_7abeec7cd3017f31.png 1080w,/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w.png 1156w'
+                src="/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w.png"
+                sizes="(min-width: 768px) 720px, 100vw"
+                width="1156" height="908"
+                alt="Differential Privacy Concept">
+        
+</figure>
+  <div class="post-content md-content"><p class="post-date" style="font-weight:600;color:#222;margin-bottom:1rem;">July 8, 2025</p>
+<h2 id="introduction">Introduction<a hidden class="anchor" aria-hidden="true" href="#introduction">#</a></h2>
+<p>With the proliferation of intelligent devices, data volume has grown explosively, providing rich training material for machine learning. However, training datasets often contain sensitive information and therefore pose serious privacy risks. For example, membership inference attacks can infer whether an individual&rsquo;s data was used to train a model.</p>
+<p>In IoT settings, federated learning keeps raw data local, but research shows that exchanged model updates (gradients) can still leak information. Traditional cryptographic methods are often too computationally heavy for realtime training. Differential Privacy (DP) offers mathematically provable privacy guarantees by introducing calibrated randomness, making it a mainstream approach to balance data utility and privacy.</p>
+<hr>
+<h2 id="1-core-concepts-of-differential-privacy">1. Core Concepts of Differential Privacy<a hidden class="anchor" aria-hidden="true" href="#1-core-concepts-of-differential-privacy">#</a></h2>
+<p>DP does not protect a dataset as a whole; rather, it protects individuals&rsquo; participation. It ensures that any single record has a limited influence on the algorithm&rsquo;s output, so an observer cannot confidently infer whether a given individual was included in the dataset.</p>
+<h3 id="11-formal-definition">1.1 Formal Definition<a hidden class="anchor" aria-hidden="true" href="#11-formal-definition">#</a></h3>
+<p>For a randomized algorithm $M$, and any pair of neighboring datasets $D$ and $D&rsquo;$ (differing in one record), for every measurable subset $S_m$ of outputs,</p>
+<p>$$\Pr[M(D) \in S_m] \le e^{\epsilon} \Pr[M(D&rsquo;) \in S_m] + \delta.$$</p>
+<p>If this holds, $M$ satisfies $(\epsilon,\delta)$-differential privacy. Here $\epsilon$ is the privacy budget (smaller $\epsilon$ means stronger privacy but lower utility) and $\delta$ is the small failure probability that allows rare deviations.</p>
+<p><img alt="DP Concept Graph" loading="lazy" src="/blog/dp_learn/images/v2-2f0d7011deea7b91a61892a01473848e_1440w.png">
+<em>Figure 1: Proximity of output distributions for neighboring datasets under mechanism M.</em></p>
+<hr>
+<h2 id="2-sensitivity-and-noise-mechanisms">2. Sensitivity and Noise Mechanisms<a hidden class="anchor" aria-hidden="true" href="#2-sensitivity-and-noise-mechanisms">#</a></h2>
+<p>DP works by adding noise to query outputs; the noise scale depends on the function&rsquo;s sensitivity.</p>
+<h3 id="21-global-sensitivity">2.1 Global Sensitivity<a hidden class="anchor" aria-hidden="true" href="#21-global-sensitivity">#</a></h3>
+<p>For a function $f:D\to R$, the global sensitivity is</p>
+<p>$$\Delta f = \max_{D,D&rsquo;} |f(D)-f(D&rsquo;)|_1,$$</p>
+<p>representing the maximum change in the output when one record is modified.</p>
+<h3 id="22-laplace-mechanism">2.2 Laplace Mechanism<a hidden class="anchor" aria-hidden="true" href="#22-laplace-mechanism">#</a></h3>
+<p>The Laplace mechanism adds noise drawn from Laplace$(\Delta f/\epsilon)$. For illustration:</p>
+<div class="highlight"><div style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">12
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">matplotlib.pyplot</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">plt</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">numpy</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">np</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">laplacian_pdf</span>(x, mu, b):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0.5</span> <span style="color:#ff7b72;font-weight:bold">/</span> b <span style="color:#ff7b72;font-weight:bold">*</span> np<span style="color:#ff7b72;font-weight:bold">.</span>exp(<span style="color:#ff7b72;font-weight:bold">-</span>abs(x <span style="color:#ff7b72;font-weight:bold">-</span> mu) <span style="color:#ff7b72;font-weight:bold">/</span> b)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>x <span style="color:#ff7b72;font-weight:bold">=</span> np<span style="color:#ff7b72;font-weight:bold">.</span>linspace(<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">10</span>, <span style="color:#a5d6ff">10</span>, <span style="color:#a5d6ff">1000</span>)
+</span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>plot(x, laplacian_pdf(x, <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">1</span>), label<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;mu=0, b=1&#39;</span>)
+</span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>plot(x, laplacian_pdf(x, <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">2</span>), label<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;mu=0, b=2&#39;</span>)
+</span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>legend()
+</span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>title(<span style="color:#a5d6ff">&#34;Laplacian PDF under different parameters&#34;</span>)
+</span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>show()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="3-non-numeric-outputs-the-exponential-mechanism">3. Non-numeric Outputs: The Exponential Mechanism<a hidden class="anchor" aria-hidden="true" href="#3-non-numeric-outputs-the-exponential-mechanism">#</a></h2>
+<p>When outputs are categorical or non-numeric (e.g., selecting a winner among candidates), use the Exponential Mechanism. It relies on a utility function $q(D,r)$ and samples candidate $r$ with probability proportional to</p>
+<p>$$\exp\left(\frac{\epsilon, q(D,r)}{2\Delta q}\right),$$</p>
+<p>where $\Delta q$ is the sensitivity of the utility function.</p>
+<p><strong>Example: robust voting system</strong> — even if an attacker controls many voters, the randomized selection induced by the exponential mechanism prevents perfect inference about any single voter&rsquo;s choice.</p>
+<hr>
+<h2 id="4-differential-privacy-in-machine-learning">4. Differential Privacy in Machine Learning<a hidden class="anchor" aria-hidden="true" href="#4-differential-privacy-in-machine-learning">#</a></h2>
+<p>In machine learning, DP is typically applied during optimization. DP-SGD modifies gradient descent by clipping per-example gradients and adding noise, preventing the model from memorizing specific examples.</p>
+<p><img alt="Model Inversion Attack" loading="lazy" src="/blog/dp_learn/images/v2-8f23a3cb35f907140e5fdfdd704ff412_1440w.png">
+<em>Figure 2: Model inversion — attacker attempts to reconstruct training data from model parameters.</em></p>
+<h3 id="41-pytorch-experiment-opacus">4.1 PyTorch Experiment (Opacus)<a hidden class="anchor" aria-hidden="true" href="#41-pytorch-experiment-opacus">#</a></h3>
+<p>Using Opacus on MNIST, comparing standard training vs DP-SGD yields results like:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Setup</th>
+          <th style="text-align: center">Accuracy</th>
+          <th style="text-align: left">Privacy Strength</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Normal SGD</td>
+          <td style="text-align: center">96.27%</td>
+          <td style="text-align: left">Weak (vulnerable to membership inference)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">DP-SGD</td>
+          <td style="text-align: center">89.16%</td>
+          <td style="text-align: left">Strong ($\epsilon=2.0$)</td>
+      </tr>
+  </tbody>
+</table>
+<p>Introducing DP typically reduces predictive accuracy because noisy gradients perturb the optimization direction. Practical work requires tuning $\epsilon$ and the noise multiplier to balance privacy and utility.</p>
+<hr>
+<h2 id="5-summary-and-perspectives">5. Summary and Perspectives<a hidden class="anchor" aria-hidden="true" href="#5-summary-and-perspectives">#</a></h2>
+<p>Differential Privacy provides rigorous privacy guarantees, but the utility–privacy trade-off remains a central challenge. Future research directions include:</p>
+<ol>
+<li>Improved noise distributions to reduce impact on convergence for large models (e.g., LLMs).</li>
+<li>Adaptive sensitivity control that dynamically allocates privacy budget across training rounds.</li>
+</ol>
+<p>Choosing privacy parameters is both a technical and an ethical decision: it requires balancing model performance and users&rsquo; privacy rights.</p>
+<hr>
+<h3 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h3>
+<p>[1] Xin Bangzhou. Research on Differential Privacy Techniques in Machine Learning [D]. University of Science and Technology of China, 2022.</p>
+<p>[2] Li Xiaoguang, Li Hui, et al. A Survey on Differential Privacy [J]. Journal of Information Security, 2018.</p>
+<hr>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="/tags/differential-privacy/">Differential Privacy</a></li>
+      <li><a href="/tags/privacy-protection/">Privacy Protection</a></li>
+      <li><a href="/tags/pytorch/">PyTorch</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="/">Yingrui Chen</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

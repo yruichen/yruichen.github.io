@@ -1,1 +1,26 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>横向项目 on Yingrui Chen</title><link>https://yruichen.tech/zh/projects/</link><description>Recent content in 横向项目 on Yingrui Chen</description><generator>Hugo</generator><language>zh</language><lastBuildDate>Sat, 23 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://yruichen.tech/zh/projects/index.xml" rel="self" type="application/rss+xml"/><item><title>Intelligent Government Service Assistant</title><link>https://yruichen.tech/zh/projects/intelligent-government-assistant/</link><pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate><guid>https://yruichen.tech/zh/projects/intelligent-government-assistant/</guid><description>A Multi-Agent System for digital government tasks.</description></item><item><title>Vibe - AI Fashion Community</title><link>https://yruichen.tech/zh/projects/vibe/</link><pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate><guid>https://yruichen.tech/zh/projects/vibe/</guid><description>An AI-powered fashion community application based on OpenHarmony.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>横向项目 on Yingrui Chen</title>
+    <link>/zh/projects/</link>
+    <description>Recent content in 横向项目 on Yingrui Chen</description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <lastBuildDate>Sat, 23 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/zh/projects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Intelligent Government Service Assistant</title>
+      <link>/zh/projects/intelligent-government-assistant/</link>
+      <pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate>
+      <guid>/zh/projects/intelligent-government-assistant/</guid>
+      <description>A Multi-Agent System for digital government tasks.</description>
+    </item>
+    <item>
+      <title>Vibe - AI Fashion Community</title>
+      <link>/zh/projects/vibe/</link>
+      <pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate>
+      <guid>/zh/projects/vibe/</guid>
+      <description>An AI-powered fashion community application based on OpenHarmony.</description>
+    </item>
+  </channel>
+</rss>

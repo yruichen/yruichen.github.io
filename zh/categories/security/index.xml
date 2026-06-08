@@ -1,1 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Security on Yingrui Chen</title><link>https://yruichen.tech/zh/categories/security/</link><description>Recent content in Security on Yingrui Chen</description><generator>Hugo</generator><language>zh</language><lastBuildDate>Tue, 08 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://yruichen.tech/zh/categories/security/index.xml" rel="self" type="application/rss+xml"/><item><title>Fundamentals of Differential Privacy: From Definitions to ML Applications</title><link>https://yruichen.tech/zh/blog/dp_learn/</link><pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate><guid>https://yruichen.tech/zh/blog/dp_learn/</guid><description>This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Security on Yingrui Chen</title>
+    <link>/zh/categories/security/</link>
+    <description>Recent content in Security on Yingrui Chen</description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <lastBuildDate>Tue, 08 Jul 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/zh/categories/security/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fundamentals of Differential Privacy: From Definitions to ML Applications</title>
+      <link>/zh/blog/dp_learn/</link>
+      <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>/zh/blog/dp_learn/</guid>
+      <description>This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.</description>
+    </item>
+  </channel>
+</rss>
