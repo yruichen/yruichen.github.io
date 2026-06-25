@@ -9,24 +9,24 @@
     <lastBuildDate>Tue, 08 Jul 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Machine Learning</title>
-      <link>/categories/machine-learning/</link>
+      <title>安全</title>
+      <link>/categories/%E5%AE%89%E5%85%A8/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
-      <guid>/categories/machine-learning/</guid>
+      <guid>/categories/%E5%AE%89%E5%85%A8/</guid>
       <description></description>
     </item>
     <item>
-      <title>Security</title>
-      <link>/categories/security/</link>
+      <title>机器学习</title>
+      <link>/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
-      <guid>/categories/security/</guid>
+      <guid>/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</guid>
       <description></description>
     </item>
     <item>
-      <title>Affine Geometry</title>
-      <link>/categories/affine-geometry/</link>
+      <title>几何</title>
+      <link>/categories/%E5%87%A0%E4%BD%95/</link>
       <pubDate>Fri, 08 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>/categories/affine-geometry/</guid>
+      <guid>/categories/%E5%87%A0%E4%BD%95/</guid>
       <description></description>
     </item>
   </channel>

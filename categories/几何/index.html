@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>几何 | Yingrui Chen</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="canonical" href="/categories/%E5%87%A0%E4%BD%95/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.1de22ecb3cf965fc8718e64431788320f6a61a65363087f34867ab4feda76274.css" integrity="sha256-HeIuyzz5ZfyHGOZEMXiDIPamGmU2MIfzSGerT&#43;2nYnQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="/img/avatar03.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/img/avatar03.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/img/avatar03.png">
+<link rel="apple-touch-icon" href="/img/avatar03.png">
+<link rel="mask-icon" href="/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="/categories/%E5%87%A0%E4%BD%95/index.xml" title="rss">
+<link rel="alternate" hreflang="en" href="/categories/%E5%87%A0%E4%BD%95/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"><meta property="og:url" content="/categories/%E5%87%A0%E4%BD%95/">
+  <meta property="og:site_name" content="Yingrui Chen">
+  <meta property="og:title" content="几何">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="website">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="几何">
+
+</head>
+<body class="list" id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="/" accesskey="h" title="Yingrui Chen (Alt + H)">Yingrui Chen</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="/research" title="Research">
+                    <span>Research</span>
+                </a>
+            </li>
+            <li>
+                <a href="/blog" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="/projects" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header"><nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/categories/">Categories</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
+  <h1>
+    几何
+  </h1>
+</header>
+
+<article class="post-entry tag-entry"> 
+<figure class="entry-cover">
+            <img loading="lazy"
+                srcset='/blog/affine_geometry/assets/media/image3.png 283w'
+                src="/blog/affine_geometry/assets/media/image3.png"
+                sizes="(min-width: 768px) 720px, 100vw"
+                width="283" height="280"
+                alt="">
+</figure>
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">仿射变换入门：从坐标、矩阵到椭圆与不变量
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>写在前面 仿射变换（affine transformation）是线性代数和几何之间非常实用的一座桥。它既可以解释“换坐标系后为什么同一个点会有不同坐标”，也可以解释图像处理中常见的平移、旋转、缩放、错切、投影近似和椭圆生成。理解仿射变换的关键不是记公式，而是把三件事分清：
+点本身是几何对象，坐标只是它在某个坐标系下的表示。 矩阵描述的是“基向量如何被送到新的方向和尺度”。 仿射变换保持直线、平行性和线段比例，但通常不保持长度、角度和圆。 本文从最基础的坐标和矩阵讲起，然后推到直线、面积、圆锥曲线和实际编程。目标是：读完之后能把仿射变换用于推导，也能把它写进代码。
+1. 坐标：点不变，表示会变 1.1 坐标依赖于基底 在平面直角坐标系 $xOy$ 中，点 $P=(4,3)$ 通常被理解为：从原点出发，沿 $x$ 轴正方向走 4 个单位，再沿 $y$ 轴正方向走 3 个单位。
+用向量语言写，若 $\vec{i},\vec{j}$ 是标准正交基，则
+$$ \overrightarrow{OP}=4\vec{i}&#43;3\vec{j}. $$如果换一组基底，例如
+$$ \vec{i}^{\prime}=2\vec{i},\qquad \vec{j}^{\prime}=\frac12\vec{j}, $$则同一个向量也可以写成
+$$ \overrightarrow{OP}=2\vec{i}^{\prime}&#43;6\vec{j}^{\prime}. $$所以同一个点在新基底下的坐标变成 $(2,6)$。这不是点移动了，而是表示方式变了。很多几何问题容易混乱，就是因为把“点的运动”和“坐标表示的改变”混在一起。
+1.2 主动变换与被动变换 理解仿射变换时，建议区分两种视角：
+主动变换：点真的被送到另一个位置。例如把图形旋转 30 度。 被动变换：点不动，只是观察它的坐标系变了。例如把坐标轴旋转 30 度。 两者公式很像，但矩阵方向往往相反。工程实践中，大多数图形库采用主动变换：给定点坐标 $x$，计算变换后的点 $x^{\prime}$。数学推导中，换基和坐标变换经常采用被动视角。写代码时必须确认自己使用的是列向量约定还是行向量约定，否则旋转方向、矩阵乘法顺序都会出错。
+2. 线性方程组与行列式 2.1 二阶行列式的几何意义 二阶矩阵
+$$ A= \begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix} $$的行列式为
+$$ \det(A)=ad-bc. $$它的几何意义是面积缩放因子。若两个基向量张成的平行四边形原面积为 1，经过矩阵 $A$ 变换后面积变成 $|\det(A)|$。符号则表示方向是否翻转：$\det(A)&gt;0$ 保持方向，$\det(A)&lt;0$ 翻转方向，$\det(A)=0$ 会把平面压扁到一条线或一个点。
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2024-03-08 00:00:00 +0000 UTC'>March 8, 2024</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to 仿射变换入门：从坐标、矩阵到椭圆与不变量" href="/blog/affine_geometry/"></a>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="/">Yingrui Chen</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -9,11 +9,11 @@
     <lastBuildDate>Tue, 08 Jul 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="/tags/pytorch/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Fundamentals of Differential Privacy: From Definitions to ML Applications</title>
+      <title>差分隐私基础：从数学定义到机器学习实践</title>
       <link>/blog/dp_learn/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
       <guid>/blog/dp_learn/</guid>
-      <description>This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.</description>
+      <description>系统梳理差分隐私的定义、隐私预算、敏感度、拉普拉斯机制、高斯机制、指数机制与 DP-SGD，并给出 PyTorch/Opacus 实践建议和常见调参清单。</description>
     </item>
   </channel>
 </rss>

@@ -30,24 +30,18 @@
       <description>&lt;p&gt;Congratulations! The manuscript has been submitted to the IEEE Journal of Biomedical and Health Informatics, Currently, the manuscript is under peer review. I will update this post with the abstract and key methodology once furtherprogress is made.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Fundamentals of Differential Privacy: From Definitions to ML Applications</title>
+      <title>差分隐私基础：从数学定义到机器学习实践</title>
       <link>/blog/dp_learn/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
       <guid>/blog/dp_learn/</guid>
-      <description>This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.</description>
+      <description>系统梳理差分隐私的定义、隐私预算、敏感度、拉普拉斯机制、高斯机制、指数机制与 DP-SGD，并给出 PyTorch/Opacus 实践建议和常见调参清单。</description>
     </item>
     <item>
-      <title>A Brief Discussion on Affine Transformations</title>
+      <title>仿射变换入门：从坐标、矩阵到椭圆与不变量</title>
       <link>/blog/affine_geometry/</link>
       <pubDate>Fri, 08 Mar 2024 00:00:00 +0000</pubDate>
       <guid>/blog/affine_geometry/</guid>
-      <description>&lt;p class=&#34;post-date&#34; style=&#34;font-weight:600;color:#222;margin-bottom:1rem;&#34;&gt;March 8, 2024&lt;/p&gt;
-&lt;h1 id=&#34;1-preliminary-knowledge&#34;&gt;1. Preliminary Knowledge&lt;/h1&gt;
-&lt;h2 id=&#34;11-about-coordinates&#34;&gt;1.1 About Coordinates&lt;/h2&gt;
-&lt;p&gt;To describe the position of a point P in the plane xOy we introduce coordinates. For example, how are the coordinates (4, 3) of point P obtained?&lt;/p&gt;
-&lt;img src=&#34;./assets/media/image3.png&#34; /&gt;
-&lt;p&gt;Intuitively, starting from the origin, P moves 4 units along the positive x-axis and then 3 units along the positive y-axis to reach (4, 3).&lt;/p&gt;
-&lt;p&gt;Alternatively, in terms of vectors, let \overrightarrow{i}, \overrightarrow{j} be an orthonormal basis of the xOy coordinate system. Then&lt;/p&gt;</description>
+      <description>从坐标表示、线性方程组和矩阵出发，系统解释仿射变换的定义、几何不变量、直线与面积的变换规律，并用椭圆和图形编程示例说明它为什么实用。</description>
     </item>
   </channel>
 </rss>

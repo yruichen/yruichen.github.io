@@ -1,18 +1,86 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  
-  <sitemap>
-    <loc>/en/sitemap.xml</loc>
-    
-      <lastmod>2026-05-23T00:00:00+00:00</lastmod>
-    
-  </sitemap>
-  
-  <sitemap>
-    <loc>/zh/sitemap.xml</loc>
-    
-      <lastmod>2026-05-23T00:00:00+00:00</lastmod>
-    
-  </sitemap>
-  
-</sitemapindex>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>/</loc>
+    <lastmod>2026-05-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/ai/</loc>
+    <lastmod>2026-05-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/html/</loc>
+    <lastmod>2026-05-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/projects/intelligent-government-assistant/</loc>
+    <lastmod>2026-05-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/mindspore/</loc>
+    <lastmod>2026-05-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/multi-agent-system/</loc>
+    <lastmod>2026-05-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/openharmony/</loc>
+    <lastmod>2026-05-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/projects/</loc>
+    <lastmod>2026-05-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/python/</loc>
+    <lastmod>2026-05-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/</loc>
+    <lastmod>2026-05-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/projects/vibe/</loc>
+    <lastmod>2026-05-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/ieee/</loc>
+    <lastmod>2026-04-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/research/ieee_jbhi/</loc>
+    <lastmod>2026-04-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/research/</loc>
+    <lastmod>2026-04-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/blog/</loc>
+    <lastmod>2025-07-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/categories/</loc>
+    <lastmod>2025-07-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/pytorch/</loc>
+    <lastmod>2025-07-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/categories/%E5%AE%89%E5%85%A8/</loc>
+    <lastmod>2025-07-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/%E5%B7%AE%E5%88%86%E9%9A%90%E7%A7%81/</loc>
+    <lastmod>2025-07-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/blog/dp_learn/</loc>
+    <lastmod>2025-07-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</loc>
+    <lastmod>2025-07-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4/</loc>
+    <lastmod>2025-07-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/%E4%BB%BF%E5%B0%84%E5%87%A0%E4%BD%95/</loc>
+    <lastmod>2024-03-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/blog/affine_geometry/</loc>
+    <lastmod>2024-03-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/categories/%E5%87%A0%E4%BD%95/</loc>
+    <lastmod>2024-03-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/</loc>
+    <lastmod>2024-03-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/</loc>
+    <lastmod>2024-03-08T00:00:00+00:00</lastmod>
+  </url>
+</urlset>

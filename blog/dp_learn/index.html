@@ -5,21 +5,20 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Fundamentals of Differential Privacy: From Definitions to ML Applications | Yingrui Chen</title>
-<meta name="keywords" content="Differential Privacy, Privacy Protection, PyTorch">
-<meta name="description" content="This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.">
+<title>差分隐私基础：从数学定义到机器学习实践 | Yingrui Chen</title>
+<meta name="keywords" content="差分隐私, 隐私保护, PyTorch">
+<meta name="description" content="系统梳理差分隐私的定义、隐私预算、敏感度、拉普拉斯机制、高斯机制、指数机制与 DP-SGD，并给出 PyTorch/Opacus 实践建议和常见调参清单。">
 <meta name="author" content="">
 <link rel="canonical" href="/blog/dp_learn/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.b16c47749748b643269a4a56f461c892192ea57cb415aee62e6b40487ce839e4.css" integrity="sha256-sWxHdJdItkMmmkpW9GHIkhkupXy0Fa7mLmtASHzoOeQ=" rel="preload stylesheet" as="style">
-<link rel="icon" href="/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.1de22ecb3cf965fc8718e64431788320f6a61a65363087f34867ab4feda76274.css" integrity="sha256-HeIuyzz5ZfyHGOZEMXiDIPamGmU2MIfzSGerT&#43;2nYnQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="/img/avatar03.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/img/avatar03.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/img/avatar03.png">
+<link rel="apple-touch-icon" href="/img/avatar03.png">
 <link rel="mask-icon" href="/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
 <link rel="alternate" hreflang="en" href="/blog/dp_learn/">
-<link rel="alternate" hreflang="zh" href="/zh/blog/dp_learn/">
 <noscript>
     <style>
         #theme-toggle,
@@ -68,17 +67,19 @@
 </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         renderMathInElement(document.body, {
             delimiters: [
                 {left: "$$", right: "$$", display: true},
                 {left: "$", right: "$", display: false}
-            ]
+            ],
+            throwOnError: false
         });
     });
 </script>
+
 
 
 
@@ -86,72 +87,22 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"><meta property="og:url" content="/blog/dp_learn/">
   <meta property="og:site_name" content="Yingrui Chen">
-  <meta property="og:title" content="Fundamentals of Differential Privacy: From Definitions to ML Applications">
-  <meta property="og:description" content="This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.">
+  <meta property="og:title" content="差分隐私基础：从数学定义到机器学习实践">
+  <meta property="og:description" content="系统梳理差分隐私的定义、隐私预算、敏感度、拉普拉斯机制、高斯机制、指数机制与 DP-SGD，并给出 PyTorch/Opacus 实践建议和常见调参清单。">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="blog">
     <meta property="article:published_time" content="2025-07-08T00:00:00+00:00">
     <meta property="article:modified_time" content="2025-07-08T00:00:00+00:00">
-    <meta property="article:tag" content="Differential Privacy">
-    <meta property="article:tag" content="Privacy Protection">
+    <meta property="article:tag" content="差分隐私">
+    <meta property="article:tag" content="隐私保护">
     <meta property="article:tag" content="PyTorch">
     <meta property="og:image" content="/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w.png">
-  <meta name="twitter:title" content="Fundamentals of Differential Privacy: From Definitions to ML Applications">
-  <meta name="twitter:description" content="This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.">
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position":  1 ,
-      "name": "Blog",
-      "item": "/blog/"
-    }
-    {
-      "@type": "ListItem",
-      "position":  1 ,
-      "name": "Fundamentals of Differential Privacy: From Definitions to ML Applications",
-      "item": "/blog/dp_learn/"
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "Fundamentals of Differential Privacy: From Definitions to ML Applications",
-  "name": "Fundamentals of Differential Privacy: From Definitions to ML Applications",
-  "description": "This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.",
-  "keywords": [
-    "Differential Privacy", "Privacy Protection", "PyTorch"
-  ],
-  "articleBody": "July 8, 2025\nIntroduction With the proliferation of intelligent devices, data volume has grown explosively, providing rich training material for machine learning. However, training datasets often contain sensitive information and therefore pose serious privacy risks. For example, membership inference attacks can infer whether an individual’s data was used to train a model.\nIn IoT settings, federated learning keeps raw data local, but research shows that exchanged model updates (gradients) can still leak information. Traditional cryptographic methods are often too computationally heavy for realtime training. Differential Privacy (DP) offers mathematically provable privacy guarantees by introducing calibrated randomness, making it a mainstream approach to balance data utility and privacy.\n1. Core Concepts of Differential Privacy DP does not protect a dataset as a whole; rather, it protects individuals’ participation. It ensures that any single record has a limited influence on the algorithm’s output, so an observer cannot confidently infer whether a given individual was included in the dataset.\n1.1 Formal Definition For a randomized algorithm $M$, and any pair of neighboring datasets $D$ and $D’$ (differing in one record), for every measurable subset $S_m$ of outputs,\n$$\\Pr[M(D) \\in S_m] \\le e^{\\epsilon} \\Pr[M(D’) \\in S_m] + \\delta.$$\nIf this holds, $M$ satisfies $(\\epsilon,\\delta)$-differential privacy. Here $\\epsilon$ is the privacy budget (smaller $\\epsilon$ means stronger privacy but lower utility) and $\\delta$ is the small failure probability that allows rare deviations.\nFigure 1: Proximity of output distributions for neighboring datasets under mechanism M.\n2. Sensitivity and Noise Mechanisms DP works by adding noise to query outputs; the noise scale depends on the function’s sensitivity.\n2.1 Global Sensitivity For a function $f:D\\to R$, the global sensitivity is\n$$\\Delta f = \\max_{D,D’} |f(D)-f(D’)|_1,$$\nrepresenting the maximum change in the output when one record is modified.\n2.2 Laplace Mechanism The Laplace mechanism adds noise drawn from Laplace$(\\Delta f/\\epsilon)$. For illustration:\n1 2 3 4 5 6 7 8 9 10 11 12 import matplotlib.pyplot as plt import numpy as np def laplacian_pdf(x, mu, b): return 0.5 / b * np.exp(-abs(x - mu) / b) x = np.linspace(-10, 10, 1000) plt.plot(x, laplacian_pdf(x, 0, 1), label='mu=0, b=1') plt.plot(x, laplacian_pdf(x, 0, 2), label='mu=0, b=2') plt.legend() plt.title(\"Laplacian PDF under different parameters\") plt.show() 3. Non-numeric Outputs: The Exponential Mechanism When outputs are categorical or non-numeric (e.g., selecting a winner among candidates), use the Exponential Mechanism. It relies on a utility function $q(D,r)$ and samples candidate $r$ with probability proportional to\n$$\\exp\\left(\\frac{\\epsilon, q(D,r)}{2\\Delta q}\\right),$$\nwhere $\\Delta q$ is the sensitivity of the utility function.\nExample: robust voting system — even if an attacker controls many voters, the randomized selection induced by the exponential mechanism prevents perfect inference about any single voter’s choice.\n4. Differential Privacy in Machine Learning In machine learning, DP is typically applied during optimization. DP-SGD modifies gradient descent by clipping per-example gradients and adding noise, preventing the model from memorizing specific examples.\nFigure 2: Model inversion — attacker attempts to reconstruct training data from model parameters.\n4.1 PyTorch Experiment (Opacus) Using Opacus on MNIST, comparing standard training vs DP-SGD yields results like:\nSetup Accuracy Privacy Strength Normal SGD 96.27% Weak (vulnerable to membership inference) DP-SGD 89.16% Strong ($\\epsilon=2.0$) Introducing DP typically reduces predictive accuracy because noisy gradients perturb the optimization direction. Practical work requires tuning $\\epsilon$ and the noise multiplier to balance privacy and utility.\n5. Summary and Perspectives Differential Privacy provides rigorous privacy guarantees, but the utility–privacy trade-off remains a central challenge. Future research directions include:\nImproved noise distributions to reduce impact on convergence for large models (e.g., LLMs). Adaptive sensitivity control that dynamically allocates privacy budget across training rounds. Choosing privacy parameters is both a technical and an ethical decision: it requires balancing model performance and users’ privacy rights.\nReferences [1] Xin Bangzhou. Research on Differential Privacy Techniques in Machine Learning [D]. University of Science and Technology of China, 2022.\n[2] Li Xiaoguang, Li Hui, et al. A Survey on Differential Privacy [J]. Journal of Information Security, 2018.\n",
-  "wordCount" : "649",
-  "inLanguage": "en",
-  "image":"/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w.png","datePublished": "2025-07-08T00:00:00Z",
-  "dateModified": "2025-07-08T00:00:00Z",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "/blog/dp_learn/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Yingrui Chen",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "/favicon.ico"
-    }
-  }
-}
-</script>
+  <meta name="twitter:title" content="差分隐私基础：从数学定义到机器学习实践">
+  <meta name="twitter:description" content="系统梳理差分隐私的定义、隐私预算、敏感度、拉普拉斯机制、高斯机制、指数机制与 DP-SGD，并给出 PyTorch/Opacus 实践建议和常见调参清单。">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","articleBody":"写在前面 机器学习系统越来越依赖真实用户数据：医疗图像、位置轨迹、搜索日志、推荐行为、设备传感器和文本交互都可能进入训练流程。数据越细，模型越容易学到有用模式，也越可能记住个体信息。攻击者不一定需要拿到原始数据，只要能访问模型输出、梯度更新或模型参数，就可能推断某个样本是否参与训练，甚至重构训练样本的部分特征。\n差分隐私（Differential Privacy, DP）提供了一种可证明的隐私保护框架。它的核心目标不是让数据“绝对不可见”，而是限制单个个体对算法输出的影响：无论某个人的数据是否出现在数据集中，外部观察者看到输出后都不应显著改变对这个人的判断。\n本文按“定义、机制、组合、机器学习实践”的顺序展开。重点不是堆概念，而是回答三个实践问题：\n$\\epsilon,\\delta$ 到底控制什么？ 噪声为什么要按敏感度来加？ 在深度学习中如何使用 DP-SGD，并避免常见误区？ 1. 隐私风险从哪里来 1.1 成员推断攻击 成员推断攻击（membership inference attack）试图判断某条记录是否在训练集中出现过。若模型对训练样本的置信度系统性高于未见样本，攻击者就可以利用输出概率、损失值或预测排名进行判断。\n例如，一个疾病风险预测模型若对某个病人的记录表现出异常高的确定性，攻击者可能推断该病人曾参与某个敏感医疗数据集。即便模型没有直接输出训练数据，这种参与关系本身也可能是隐私信息。\n1.2 模型反演与梯度泄露 模型反演攻击（model inversion）尝试根据模型输出恢复输入特征；梯度泄露攻击则利用联邦学习或分布式训练中的梯度更新重构训练样本。研究表明，在小批量训练、过参数化模型和高维输入场景中，梯度可能携带大量样本信息。\n联邦学习只能减少原始数据离开本地设备的风险，并不自动保证隐私。如果上传的梯度或模型更新没有额外保护，攻击者仍然可能从更新中推断本地数据。因此，联邦学习常与安全聚合、差分隐私和可信执行环境组合使用。\n2. 差分隐私的形式化定义 2.1 相邻数据集 差分隐私比较的是两个相邻数据集 $D$ 和 $D^{\\prime}$。常见定义有两种：\nadd/remove 邻接：$D^{\\prime}$ 比 $D$ 多或少一条记录。 replace-one 邻接：$D$ 和 $D^{\\prime}$ 记录数相同，但其中一条记录不同。 不同邻接定义会影响敏感度和隐私预算解释。阅读论文或工具文档时，需要确认使用的是哪一种。\n2.2 $(\\epsilon,\\delta)$-差分隐私 随机算法 $M$ 满足 $(\\epsilon,\\delta)$-差分隐私，若对任意相邻数据集 $D,D^{\\prime}$ 和任意输出集合 $S$，都有\n$$ \\Pr[M(D)\\in S]\\le e^\\epsilon \\Pr[M(D^{\\prime})\\in S]+\\delta. $$其中：\n$\\epsilon$ 控制输出分布的最大可区分程度。越小，隐私越强，噪声通常越大。 $\\delta$ 是允许极小概率失败的松弛项。实际中通常要求 $\\delta$ 小于数据集规模倒数，例如 $\\delta \u003c 1/n$ 或更严格。 当 $\\delta=0$ 时，称为纯差分隐私（pure DP）；当 $\\delta\u003e0$ 时，称为近似差分隐私（approximate DP）。深度学习中常用的是近似 DP，因为高斯机制和 DP-SGD 更自然地落在 $(\\epsilon,\\delta)$ 框架下。\n2.3 隐私损失随机变量 为了理解 $\\epsilon$，可以定义隐私损失：\n$$ L(o)=\\log\\frac{\\Pr[M(D)=o]}{\\Pr[M(D^{\\prime})=o]}. $$差分隐私要求这个比值不要太大。也就是说，观察到输出 $o$ 后，攻击者不能非常确定地区分数据来自 $D$ 还是 $D^{\\prime}$。这就是“保护个体参与”的数学形式。\n3. 差分隐私的三个基本性质 3.1 后处理不损害隐私 如果 $M(D)$ 已经满足差分隐私，那么对输出再做任意不访问原始数据的函数处理 $f(M(D))$，仍然满足同样的差分隐私。这叫后处理性质（post-processing）。\n这个性质很实用。例如模型训练时加入 DP 噪声后，后续把模型转换格式、压缩、部署、做推理接口封装，都不会额外消耗隐私预算。前提是这些步骤不再次访问未保护的训练数据。\n3.2 组合会消耗隐私预算 如果对同一数据集重复运行多个 DP 算法，总隐私损失会累积。最简单的顺序组合为：\n$$ \\epsilon_{\\text{total}}=\\sum_i \\epsilon_i. $$实际机器学习中，训练会迭代很多步，因此不能简单地每一步都用很大的 $\\epsilon$。DP-SGD 需要使用隐私会计（privacy accountant）来累计多轮采样、裁剪和加噪后的总隐私预算。常见会计方法包括 moments accountant、Rényi Differential Privacy (RDP) 和 Gaussian DP 等。\n3.3 并行组合可以节省预算 如果不同 DP 查询作用在互不重叠的数据子集上，总隐私预算可以取最大值而不是求和。这叫并行组合。它在分组统计、分区查询和某些联邦学习场景中有用。\n4. 敏感度：噪声尺度的来源 4.1 全局敏感度 对查询函数 $f:D\\to \\mathbb{R}^k$，其 $L_1$ 全局敏感度定义为\n$$ \\Delta_1 f=\\max_{D,D^{\\prime}}\\lVert f(D)-f(D^{\\prime})\\rVert_1. $$它表示改变一条记录时，查询结果最多会变化多少。差分隐私的噪声尺度不是随便选的，而是由敏感度和隐私预算共同决定。\n例如，统计数据库中满足某条件的人数。改变一条记录最多让计数变化 1，因此敏感度为 1。若统计平均值，则必须先限制每个样本的取值范围，否则单个异常值可能让平均值变化非常大，敏感度无法控制。\n4.2 裁剪是机器学习中的敏感度控制 深度学习中，单个样本的梯度范数可能很大。如果直接对梯度加噪，敏感度没有上界，无法给出有效 DP 保证。DP-SGD 的第一步就是对每个样本的梯度进行裁剪：\n$$ \\bar{g}_i = g_i \\cdot \\min\\left(1,\\frac{C}{\\|g_i\\|_2}\\right), $$其中 $C$ 是裁剪阈值。裁剪后每个样本对 batch 平均梯度的贡献被限制住，后续加高斯噪声才有意义。\n5. 基本机制 5.1 拉普拉斯机制 对数值查询 $f(D)$，拉普拉斯机制输出\n$$ M(D)=f(D)+\\eta,\\qquad \\eta\\sim \\operatorname{Laplace}\\left(0,\\frac{\\Delta_1 f}{\\epsilon}\\right). $$噪声尺度为 $\\Delta_1 f/\\epsilon$。敏感度越大，需要的噪声越大；$\\epsilon$ 越小，隐私越强，噪声也越大。\n下面的代码可视化不同尺度的拉普拉斯分布：\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 import numpy as np import matplotlib.pyplot as plt def laplace_pdf(x, mu, b): return 0.5 / b * np.exp(-np.abs(x - mu) / b) x = np.linspace(-10, 10, 1000) for b in [0.5, 1.0, 2.0]: plt.plot(x, laplace_pdf(x, 0, b), label=f\"b={b}\") plt.title(\"Laplace distribution with different scales\") plt.xlabel(\"noise\") plt.ylabel(\"density\") plt.legend() plt.show() 实践建议：拉普拉斯机制适合简单统计查询，如计数、求和、直方图。用于均值时必须先裁剪或限制取值范围。\n5.2 高斯机制 高斯机制输出\n$$ M(D)=f(D)+\\mathcal{N}(0,\\sigma^2 I). $$它通常用于 $(\\epsilon,\\delta)$-DP。与拉普拉斯机制相比，高斯噪声更适合 $L_2$ 敏感度和高维向量场景，因此在 DP-SGD 中更常见。\n在机器学习中，加噪对象不是最终模型输出，而是每一步的裁剪后平均梯度：\n$$ \\tilde{g}=\\frac1B\\left(\\sum_{i=1}^{B}\\bar{g}_i+\\mathcal{N}(0,\\sigma^2 C^2 I)\\right), $$其中 $B$ 是 batch size，$C$ 是裁剪阈值，$\\sigma$ 是 noise multiplier。\n5.3 指数机制 当输出不是数值，而是类别、候选项或离散选择时，可以使用指数机制。设效用函数为 $q(D,r)$，衡量输出候选 $r$ 的好坏；其敏感度为 $\\Delta q$。指数机制按如下概率采样：\n$$ \\Pr[M(D)=r]\\propto \\exp\\left(\\frac{\\epsilon q(D,r)}{2\\Delta q}\\right). $$效用越高的候选越容易被选中，但采样仍有随机性，从而限制单条记录对最终选择的影响。\n典型应用包括：隐私保护的投票、选择最优模型、选择特征、选择聚类中心等。它的关键是设计效用函数，并控制该函数对单条记录的敏感度。\n6. DP-SGD：深度学习中的差分隐私 6.1 标准 SGD 为什么不够 标准 SGD 每次用一个 batch 的梯度更新参数：\n$$ \\theta_{t+1}=\\theta_t-\\eta \\frac1B\\sum_{i=1}^{B}g_i. $$如果某个样本梯度非常特殊，它可能显著影响更新方向。模型经过多轮训练后，可能记住该样本的模式。过拟合越严重，成员推断攻击通常越容易成功。\n6.2 DP-SGD 的步骤 DP-SGD 每轮训练通常包含四步：\n对 batch 中每个样本计算 per-sample gradient。 将每个样本梯度裁剪到范数不超过 $C$。 对裁剪后的梯度和加入高斯噪声。 用加噪后的平均梯度更新模型参数。 伪代码如下：\n1 2 3 4 5 6 7 8 for each training step: sample a mini-batch for each example i: compute gradient g_i clip g_i to norm C add Gaussian noise to summed gradients average noisy gradients update model parameters DP-SGD 的核心代价来自两部分：裁剪会改变真实梯度方向，噪声会增加优化方差。因此它通常会降低模型精度，尤其在数据量小、模型大、任务难或隐私预算很严格时更明显。\n7. 用 Opacus 训练一个 DP 模型 7.1 最小代码结构 Opacus 是 PyTorch 生态中常用的 DP-SGD 工具。典型流程是先定义模型、优化器和 dataloader，然后用 PrivacyEngine 包装训练过程。\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 import torch import torch.nn as nn import torch.optim as optim from opacus import PrivacyEngine model = nn.Sequential( nn.Flatten(), nn.Linear(28 * 28, 128), nn.ReLU(), nn.Linear(128, 10), ) optimizer = optim.SGD(model.parameters(), lr=0.05, momentum=0.9) criterion = nn.CrossEntropyLoss() privacy_engine = PrivacyEngine() model, optimizer, train_loader = privacy_engine.make_private( module=model, optimizer=optimizer, data_loader=train_loader, noise_multiplier=1.1, max_grad_norm=1.0, ) for epoch in range(epochs): model.train() for x, y in train_loader: optimizer.zero_grad() logits = model(x) loss = criterion(logits, y) loss.backward() optimizer.step() epsilon = privacy_engine.get_epsilon(delta=1e-5) print(f\"epoch={epoch}, epsilon={epsilon:.2f}\") 7.2 关键参数如何理解 参数 作用 调大后的影响 调小后的影响 noise_multiplier 高斯噪声强度 隐私更强，精度可能下降 精度可能更好，隐私变弱 max_grad_norm 梯度裁剪阈值 裁剪更少，但需要更大噪声 裁剪更强，可能欠拟合 batch size 每步样本数 梯度更稳定，但采样率变化会影响会计 噪声影响更明显 epochs 训练轮数 精度可能提升，但隐私预算消耗增加 隐私消耗少，但可能未收敛 learning rate 更新步长 收敛快但不稳定 稳定但可能慢 实践中不要只调 epsilon。更常见的流程是先设定隐私目标，再搜索 noise_multiplier、max_grad_norm、batch size 和学习率。\n7.3 一个可执行的调参顺序 先训练非 DP baseline，确认模型和数据管道正常。 固定模型结构和 batch size，加入 DP-SGD。 从 max_grad_norm=1.0、noise_multiplier=1.0 附近开始。 若训练 loss 不下降，先调学习率和裁剪阈值，不要马上降低噪声。 若 epsilon 太大，提高 noise multiplier 或减少 epochs。 若精度下降过多，尝试更小模型、更强正则、更好预训练或更大数据量。 8. 结果解释：精度下降不是失败 假设在 MNIST 上比较标准 SGD 和 DP-SGD，可能得到类似结果：\n设置 测试准确率 隐私说明 标准 SGD 96% 左右 没有显式 DP 保证 DP-SGD 88% 到 92% 取决于 $\\epsilon,\\delta$ 和噪声强度 这种差距并不意外。DP 的目标不是免费提升泛化，而是在可接受性能下给出可审计的个体隐私保护。对于医疗、金融和用户行为数据，牺牲少量精度换取明确隐私边界通常是合理的工程选择。\n需要避免一种错误表达：不能只说“我们加了噪声，所以保护隐私”。严谨表述应包含邻接定义、机制、$\\epsilon,\\delta$、隐私会计方法、训练轮数、采样率和裁剪阈值。\n9. 常见误区 9.1 只对最终模型参数加噪 训练完成后再给模型参数加一点噪声，通常不能提供可靠 DP 保证。因为模型在训练过程中已经充分接触原始数据，可能已经记住敏感样本。DP-SGD 的关键是在每一步优化时控制单样本贡献并加噪。\n9.2 不裁剪梯度就加噪 没有裁剪就没有稳定敏感度上界。噪声尺度无法校准，隐私保证也不成立。\n9.3 只报告 epsilon，不报告 delta $(\\epsilon,\\delta)$ 是一组参数。只报告 $\\epsilon$ 会隐藏失败概率假设。还应报告数据集规模和 $\\delta$ 的选取理由。\n9.4 把 DP 当成防御所有攻击的方法 差分隐私主要限制个体参与信息泄露，不等于防止模型被盗、不等于防止提示注入、不等于防止训练数据本身被系统管理员看到。完整隐私系统通常还需要访问控制、加密、安全审计、数据最小化和合规流程。\n10. 实践清单 如果要在项目中使用差分隐私，可以按下面清单推进：\n明确保护对象：保护用户是否参与训练，还是保护具体属性值？ 明确数据边界：一条 record 是一个样本、一个用户，还是一个用户的所有样本？ 选择邻接定义：add/remove 还是 replace-one。 对输入做裁剪或范围限制，确保敏感度可控。 选择机制：简单统计用拉普拉斯或高斯机制；模型训练用 DP-SGD；离散选择用指数机制。 记录隐私会计方法和最终 $\\epsilon,\\delta$。 与非 DP baseline 对比，报告精度、训练稳定性和隐私预算。 做成员推断攻击评估，验证 DP 是否降低攻击成功率。 保留实验配置，确保隐私声明可复现。 11. 小结 差分隐私的核心思想是限制单条记录对输出分布的影响。敏感度决定噪声尺度，隐私预算控制可区分程度，组合定理解释多次查询或多轮训练时隐私如何累积。对于机器学习，DP-SGD 通过 per-sample gradient clipping 和 Gaussian noise 把这个思想嵌入优化过程。\n实际使用 DP 时，最重要的是完整报告：数据邻接定义、裁剪阈值、噪声强度、采样率、训练轮数、会计方法和最终 $\\epsilon,\\delta$。只有这些信息齐全，隐私保证才是可解释、可复现、可审计的。\n参考文献 [1] Cynthia Dwork. Differential Privacy. ICALP, 2006.\n[2] Cynthia Dwork, Aaron Roth. The Algorithmic Foundations of Differential Privacy. Now Publishers, 2014.\n[3] Frank McSherry, Kunal Talwar. Mechanism Design via Differential Privacy. FOCS, 2007.\n[4] Martin Abadi, Andy Chu, Ian Goodfellow, H. Brendan McMahan, Ilya Mironov, Kunal Talwar, Li Zhang. Deep Learning with Differential Privacy. ACM CCS, 2016.\n[5] Ilya Mironov. Rényi Differential Privacy. IEEE CSF, 2017.\n[6] H. Brendan McMahan, Daniel Ramage, Kunal Talwar, Li Zhang. Learning Differentially Private Recurrent Language Models. ICLR, 2018.\n[7] Nicholas Carlini, Chang Liu, Úlfar Erlingsson, Jernej Kos, Dawn Song. The Secret Sharer: Evaluating and Testing Unintended Memorization in Neural Networks. USENIX Security, 2019.\n[8] Opacus Team. Opacus: User-Friendly Differential Privacy Library in PyTorch. Meta AI.\n[9] Bangzhou Xin. Research on Differential Privacy Techniques in Machine Learning. University of Science and Technology of China, 2022.\n[10] Xiaoguang Li, Hui Li, et al. A Survey on Differential Privacy. Journal of Information Security, 2018.\n","author":{"@type":"Person","name":"Yingrui Chen"},"dateModified":"2025-07-08T00:00:00Z","datePublished":"2025-07-08T00:00:00Z","description":"系统梳理差分隐私的定义、隐私预算、敏感度、拉普拉斯机制、高斯机制、指数机制与 DP-SGD，并给出 PyTorch/Opacus 实践建议和常见调参清单。","headline":"差分隐私基础：从数学定义到机器学习实践","inLanguage":"en","mainEntityOfPage":{"@id":"/blog/dp_learn/","@type":"WebPage"},"name":"差分隐私基础：从数学定义到机器学习实践","publisher":{"@type":"Person","name":"Yingrui Chen"},"wordCount":787}</script>
 </head>
 <body id="top">
     <header class="header">
@@ -178,13 +129,7 @@
                         <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
                         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
                     </svg>
-                </button><span class="nav-sep">|</span>
-                    <ul class="lang-menu">
-                        <li>
-                            <a href="/zh/" title="Zh"
-                                aria-label="Zh">Zh</a>
-                        </li>
-                    </ul>
+                </button>
             </div>
         </div>
         <ul id="menu" class="menu">
@@ -223,19 +168,14 @@
     </svg>
 </nav>
     <h1 class="post-title entry-hint-parent">
-      Fundamentals of Differential Privacy: From Definitions to ML Applications
+      差分隐私基础：从数学定义到机器学习实践
     </h1>
     <div class="post-description">
-      This article systematically introduces the core concepts of Differential Privacy (DP), mathematical mechanisms (Laplace and Exponential), and practical applications in deep learning.
+      系统梳理差分隐私的定义、隐私预算、敏感度、拉普拉斯机制、高斯机制、指数机制与 DP-SGD，并给出 PyTorch/Opacus 实践建议和常见调参清单。
     </div>
     <div class="post-meta">
 
-<span title='2025-07-08 00:00:00 +0000 UTC'>July 8, 2025</span>&nbsp;·&nbsp;<span>4 min</span>&nbsp;|&nbsp;<span>Translations:</span>
-    <ul class="i18n_list">
-        <li>
-            <a href="/zh/blog/dp_learn/">Zh</a>
-        </li>
-    </ul>
+<span title='2025-07-08 00:00:00 +0000 UTC'>July 8, 2025</span>&nbsp;·&nbsp;<span>4 min</span>
 
 </div>
   </header> 
@@ -247,29 +187,78 @@
                 width="1156" height="908"
                 alt="Differential Privacy Concept">
         
-</figure>
-  <div class="post-content md-content"><p class="post-date" style="font-weight:600;color:#222;margin-bottom:1rem;">July 8, 2025</p>
-<h2 id="introduction">Introduction<a hidden class="anchor" aria-hidden="true" href="#introduction">#</a></h2>
-<p>With the proliferation of intelligent devices, data volume has grown explosively, providing rich training material for machine learning. However, training datasets often contain sensitive information and therefore pose serious privacy risks. For example, membership inference attacks can infer whether an individual&rsquo;s data was used to train a model.</p>
-<p>In IoT settings, federated learning keeps raw data local, but research shows that exchanged model updates (gradients) can still leak information. Traditional cryptographic methods are often too computationally heavy for realtime training. Differential Privacy (DP) offers mathematically provable privacy guarantees by introducing calibrated randomness, making it a mainstream approach to balance data utility and privacy.</p>
-<hr>
-<h2 id="1-core-concepts-of-differential-privacy">1. Core Concepts of Differential Privacy<a hidden class="anchor" aria-hidden="true" href="#1-core-concepts-of-differential-privacy">#</a></h2>
-<p>DP does not protect a dataset as a whole; rather, it protects individuals&rsquo; participation. It ensures that any single record has a limited influence on the algorithm&rsquo;s output, so an observer cannot confidently infer whether a given individual was included in the dataset.</p>
-<h3 id="11-formal-definition">1.1 Formal Definition<a hidden class="anchor" aria-hidden="true" href="#11-formal-definition">#</a></h3>
-<p>For a randomized algorithm $M$, and any pair of neighboring datasets $D$ and $D&rsquo;$ (differing in one record), for every measurable subset $S_m$ of outputs,</p>
-<p>$$\Pr[M(D) \in S_m] \le e^{\epsilon} \Pr[M(D&rsquo;) \in S_m] + \delta.$$</p>
-<p>If this holds, $M$ satisfies $(\epsilon,\delta)$-differential privacy. Here $\epsilon$ is the privacy budget (smaller $\epsilon$ means stronger privacy but lower utility) and $\delta$ is the small failure probability that allows rare deviations.</p>
-<p><img alt="DP Concept Graph" loading="lazy" src="/blog/dp_learn/images/v2-2f0d7011deea7b91a61892a01473848e_1440w.png">
-<em>Figure 1: Proximity of output distributions for neighboring datasets under mechanism M.</em></p>
-<hr>
-<h2 id="2-sensitivity-and-noise-mechanisms">2. Sensitivity and Noise Mechanisms<a hidden class="anchor" aria-hidden="true" href="#2-sensitivity-and-noise-mechanisms">#</a></h2>
-<p>DP works by adding noise to query outputs; the noise scale depends on the function&rsquo;s sensitivity.</p>
-<h3 id="21-global-sensitivity">2.1 Global Sensitivity<a hidden class="anchor" aria-hidden="true" href="#21-global-sensitivity">#</a></h3>
-<p>For a function $f:D\to R$, the global sensitivity is</p>
-<p>$$\Delta f = \max_{D,D&rsquo;} |f(D)-f(D&rsquo;)|_1,$$</p>
-<p>representing the maximum change in the output when one record is modified.</p>
-<h3 id="22-laplace-mechanism">2.2 Laplace Mechanism<a hidden class="anchor" aria-hidden="true" href="#22-laplace-mechanism">#</a></h3>
-<p>The Laplace mechanism adds noise drawn from Laplace$(\Delta f/\epsilon)$. For illustration:</p>
+</figure><div class="article-shell has-toc">
+    <div class="article-main">
+      <div class="post-content md-content"><h2 id="写在前面">写在前面<a hidden class="anchor" aria-hidden="true" href="#写在前面">#</a></h2>
+<p>机器学习系统越来越依赖真实用户数据：医疗图像、位置轨迹、搜索日志、推荐行为、设备传感器和文本交互都可能进入训练流程。数据越细，模型越容易学到有用模式，也越可能记住个体信息。攻击者不一定需要拿到原始数据，只要能访问模型输出、梯度更新或模型参数，就可能推断某个样本是否参与训练，甚至重构训练样本的部分特征。</p>
+<p>差分隐私（Differential Privacy, DP）提供了一种可证明的隐私保护框架。它的核心目标不是让数据“绝对不可见”，而是限制单个个体对算法输出的影响：无论某个人的数据是否出现在数据集中，外部观察者看到输出后都不应显著改变对这个人的判断。</p>
+<p>本文按“定义、机制、组合、机器学习实践”的顺序展开。重点不是堆概念，而是回答三个实践问题：</p>
+<ol>
+<li>$\epsilon,\delta$ 到底控制什么？</li>
+<li>噪声为什么要按敏感度来加？</li>
+<li>在深度学习中如何使用 DP-SGD，并避免常见误区？</li>
+</ol>
+<h2 id="1-隐私风险从哪里来">1. 隐私风险从哪里来<a hidden class="anchor" aria-hidden="true" href="#1-隐私风险从哪里来">#</a></h2>
+<h3 id="11-成员推断攻击">1.1 成员推断攻击<a hidden class="anchor" aria-hidden="true" href="#11-成员推断攻击">#</a></h3>
+<p>成员推断攻击（membership inference attack）试图判断某条记录是否在训练集中出现过。若模型对训练样本的置信度系统性高于未见样本，攻击者就可以利用输出概率、损失值或预测排名进行判断。</p>
+<p>例如，一个疾病风险预测模型若对某个病人的记录表现出异常高的确定性，攻击者可能推断该病人曾参与某个敏感医疗数据集。即便模型没有直接输出训练数据，这种参与关系本身也可能是隐私信息。</p>
+<h3 id="12-模型反演与梯度泄露">1.2 模型反演与梯度泄露<a hidden class="anchor" aria-hidden="true" href="#12-模型反演与梯度泄露">#</a></h3>
+<p>模型反演攻击（model inversion）尝试根据模型输出恢复输入特征；梯度泄露攻击则利用联邦学习或分布式训练中的梯度更新重构训练样本。研究表明，在小批量训练、过参数化模型和高维输入场景中，梯度可能携带大量样本信息。</p>
+<p>联邦学习只能减少原始数据离开本地设备的风险，并不自动保证隐私。如果上传的梯度或模型更新没有额外保护，攻击者仍然可能从更新中推断本地数据。因此，联邦学习常与安全聚合、差分隐私和可信执行环境组合使用。</p>
+<h2 id="2-差分隐私的形式化定义">2. 差分隐私的形式化定义<a hidden class="anchor" aria-hidden="true" href="#2-差分隐私的形式化定义">#</a></h2>
+<h3 id="21-相邻数据集">2.1 相邻数据集<a hidden class="anchor" aria-hidden="true" href="#21-相邻数据集">#</a></h3>
+<p>差分隐私比较的是两个相邻数据集 $D$ 和 $D^{\prime}$。常见定义有两种：</p>
+<ul>
+<li>add/remove 邻接：$D^{\prime}$ 比 $D$ 多或少一条记录。</li>
+<li>replace-one 邻接：$D$ 和 $D^{\prime}$ 记录数相同，但其中一条记录不同。</li>
+</ul>
+<p>不同邻接定义会影响敏感度和隐私预算解释。阅读论文或工具文档时，需要确认使用的是哪一种。</p>
+<h3 id="22--差分隐私">2.2 $(\epsilon,\delta)$-差分隐私<a hidden class="anchor" aria-hidden="true" href="#22--差分隐私">#</a></h3>
+<p>随机算法 $M$ 满足 $(\epsilon,\delta)$-差分隐私，若对任意相邻数据集 $D,D^{\prime}$ 和任意输出集合 $S$，都有</p>
+$$
+\Pr[M(D)\in S]\le e^\epsilon \Pr[M(D^{\prime})\in S]+\delta.
+$$<p>其中：</p>
+<ul>
+<li>$\epsilon$ 控制输出分布的最大可区分程度。越小，隐私越强，噪声通常越大。</li>
+<li>$\delta$ 是允许极小概率失败的松弛项。实际中通常要求 $\delta$ 小于数据集规模倒数，例如 $\delta < 1/n$ 或更严格。</li>
+</ul>
+<p>当 $\delta=0$ 时，称为纯差分隐私（pure DP）；当 $\delta>0$ 时，称为近似差分隐私（approximate DP）。深度学习中常用的是近似 DP，因为高斯机制和 DP-SGD 更自然地落在 $(\epsilon,\delta)$ 框架下。</p>
+<h3 id="23-隐私损失随机变量">2.3 隐私损失随机变量<a hidden class="anchor" aria-hidden="true" href="#23-隐私损失随机变量">#</a></h3>
+<p>为了理解 $\epsilon$，可以定义隐私损失：</p>
+$$
+L(o)=\log\frac{\Pr[M(D)=o]}{\Pr[M(D^{\prime})=o]}.
+$$<p>差分隐私要求这个比值不要太大。也就是说，观察到输出 $o$ 后，攻击者不能非常确定地区分数据来自 $D$ 还是 $D^{\prime}$。这就是“保护个体参与”的数学形式。</p>
+<p><img alt="DP Concept Graph" loading="lazy" src="/blog/dp_learn/images/v2-2f0d7011deea7b91a61892a01473848e_1440w.png"></p>
+<h2 id="3-差分隐私的三个基本性质">3. 差分隐私的三个基本性质<a hidden class="anchor" aria-hidden="true" href="#3-差分隐私的三个基本性质">#</a></h2>
+<h3 id="31-后处理不损害隐私">3.1 后处理不损害隐私<a hidden class="anchor" aria-hidden="true" href="#31-后处理不损害隐私">#</a></h3>
+<p>如果 $M(D)$ 已经满足差分隐私，那么对输出再做任意不访问原始数据的函数处理 $f(M(D))$，仍然满足同样的差分隐私。这叫后处理性质（post-processing）。</p>
+<p>这个性质很实用。例如模型训练时加入 DP 噪声后，后续把模型转换格式、压缩、部署、做推理接口封装，都不会额外消耗隐私预算。前提是这些步骤不再次访问未保护的训练数据。</p>
+<h3 id="32-组合会消耗隐私预算">3.2 组合会消耗隐私预算<a hidden class="anchor" aria-hidden="true" href="#32-组合会消耗隐私预算">#</a></h3>
+<p>如果对同一数据集重复运行多个 DP 算法，总隐私损失会累积。最简单的顺序组合为：</p>
+$$
+\epsilon_{\text{total}}=\sum_i \epsilon_i.
+$$<p>实际机器学习中，训练会迭代很多步，因此不能简单地每一步都用很大的 $\epsilon$。DP-SGD 需要使用隐私会计（privacy accountant）来累计多轮采样、裁剪和加噪后的总隐私预算。常见会计方法包括 moments accountant、Rényi Differential Privacy (RDP) 和 Gaussian DP 等。</p>
+<h3 id="33-并行组合可以节省预算">3.3 并行组合可以节省预算<a hidden class="anchor" aria-hidden="true" href="#33-并行组合可以节省预算">#</a></h3>
+<p>如果不同 DP 查询作用在互不重叠的数据子集上，总隐私预算可以取最大值而不是求和。这叫并行组合。它在分组统计、分区查询和某些联邦学习场景中有用。</p>
+<h2 id="4-敏感度噪声尺度的来源">4. 敏感度：噪声尺度的来源<a hidden class="anchor" aria-hidden="true" href="#4-敏感度噪声尺度的来源">#</a></h2>
+<h3 id="41-全局敏感度">4.1 全局敏感度<a hidden class="anchor" aria-hidden="true" href="#41-全局敏感度">#</a></h3>
+<p>对查询函数 $f:D\to \mathbb{R}^k$，其 $L_1$ 全局敏感度定义为</p>
+$$
+\Delta_1 f=\max_{D,D^{\prime}}\lVert f(D)-f(D^{\prime})\rVert_1.
+$$<p>它表示改变一条记录时，查询结果最多会变化多少。差分隐私的噪声尺度不是随便选的，而是由敏感度和隐私预算共同决定。</p>
+<p>例如，统计数据库中满足某条件的人数。改变一条记录最多让计数变化 1，因此敏感度为 1。若统计平均值，则必须先限制每个样本的取值范围，否则单个异常值可能让平均值变化非常大，敏感度无法控制。</p>
+<h3 id="42-裁剪是机器学习中的敏感度控制">4.2 裁剪是机器学习中的敏感度控制<a hidden class="anchor" aria-hidden="true" href="#42-裁剪是机器学习中的敏感度控制">#</a></h3>
+<p>深度学习中，单个样本的梯度范数可能很大。如果直接对梯度加噪，敏感度没有上界，无法给出有效 DP 保证。DP-SGD 的第一步就是对每个样本的梯度进行裁剪：</p>
+$$
+\bar{g}_i = g_i \cdot \min\left(1,\frac{C}{\|g_i\|_2}\right),
+$$<p>其中 $C$ 是裁剪阈值。裁剪后每个样本对 batch 平均梯度的贡献被限制住，后续加高斯噪声才有意义。</p>
+<h2 id="5-基本机制">5. 基本机制<a hidden class="anchor" aria-hidden="true" href="#5-基本机制">#</a></h2>
+<h3 id="51-拉普拉斯机制">5.1 拉普拉斯机制<a hidden class="anchor" aria-hidden="true" href="#51-拉普拉斯机制">#</a></h3>
+<p>对数值查询 $f(D)$，拉普拉斯机制输出</p>
+$$
+M(D)=f(D)+\eta,\qquad \eta\sim \operatorname{Laplace}\left(0,\frac{\Delta_1 f}{\epsilon}\right).
+$$<p>噪声尺度为 $\Delta_1 f/\epsilon$。敏感度越大，需要的噪声越大；$\epsilon$ 越小，隐私越强，噪声也越大。</p>
+<p>下面的代码可视化不同尺度的拉普拉斯分布：</p>
 <div class="highlight"><div style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 1
@@ -284,78 +273,360 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">10
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">11
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">16
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">matplotlib.pyplot</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">plt</span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">numpy</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">np</span>
+<pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">numpy</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">np</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">matplotlib.pyplot</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">plt</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">laplacian_pdf</span>(x, mu, b):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0.5</span> <span style="color:#ff7b72;font-weight:bold">/</span> b <span style="color:#ff7b72;font-weight:bold">*</span> np<span style="color:#ff7b72;font-weight:bold">.</span>exp(<span style="color:#ff7b72;font-weight:bold">-</span>abs(x <span style="color:#ff7b72;font-weight:bold">-</span> mu) <span style="color:#ff7b72;font-weight:bold">/</span> b)
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">laplace_pdf</span>(x, mu, b):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0.5</span> <span style="color:#ff7b72;font-weight:bold">/</span> b <span style="color:#ff7b72;font-weight:bold">*</span> np<span style="color:#ff7b72;font-weight:bold">.</span>exp(<span style="color:#ff7b72;font-weight:bold">-</span>np<span style="color:#ff7b72;font-weight:bold">.</span>abs(x <span style="color:#ff7b72;font-weight:bold">-</span> mu) <span style="color:#ff7b72;font-weight:bold">/</span> b)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>x <span style="color:#ff7b72;font-weight:bold">=</span> np<span style="color:#ff7b72;font-weight:bold">.</span>linspace(<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">10</span>, <span style="color:#a5d6ff">10</span>, <span style="color:#a5d6ff">1000</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>plot(x, laplacian_pdf(x, <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">1</span>), label<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;mu=0, b=1&#39;</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>plot(x, laplacian_pdf(x, <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">2</span>), label<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;mu=0, b=2&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">for</span> b <span style="color:#ff7b72;font-weight:bold">in</span> [<span style="color:#a5d6ff">0.5</span>, <span style="color:#a5d6ff">1.0</span>, <span style="color:#a5d6ff">2.0</span>]:
+</span></span><span style="display:flex;"><span>    plt<span style="color:#ff7b72;font-weight:bold">.</span>plot(x, laplace_pdf(x, <span style="color:#a5d6ff">0</span>, b), label<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;b=</span><span style="color:#a5d6ff">{</span>b<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>title(<span style="color:#a5d6ff">&#34;Laplace distribution with different scales&#34;</span>)
+</span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>xlabel(<span style="color:#a5d6ff">&#34;noise&#34;</span>)
+</span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>ylabel(<span style="color:#a5d6ff">&#34;density&#34;</span>)
 </span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>legend()
-</span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>title(<span style="color:#a5d6ff">&#34;Laplacian PDF under different parameters&#34;</span>)
 </span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>show()
 </span></span></code></pre></td></tr></table>
 </div>
-</div><hr>
-<h2 id="3-non-numeric-outputs-the-exponential-mechanism">3. Non-numeric Outputs: The Exponential Mechanism<a hidden class="anchor" aria-hidden="true" href="#3-non-numeric-outputs-the-exponential-mechanism">#</a></h2>
-<p>When outputs are categorical or non-numeric (e.g., selecting a winner among candidates), use the Exponential Mechanism. It relies on a utility function $q(D,r)$ and samples candidate $r$ with probability proportional to</p>
-<p>$$\exp\left(\frac{\epsilon, q(D,r)}{2\Delta q}\right),$$</p>
-<p>where $\Delta q$ is the sensitivity of the utility function.</p>
-<p><strong>Example: robust voting system</strong> — even if an attacker controls many voters, the randomized selection induced by the exponential mechanism prevents perfect inference about any single voter&rsquo;s choice.</p>
-<hr>
-<h2 id="4-differential-privacy-in-machine-learning">4. Differential Privacy in Machine Learning<a hidden class="anchor" aria-hidden="true" href="#4-differential-privacy-in-machine-learning">#</a></h2>
-<p>In machine learning, DP is typically applied during optimization. DP-SGD modifies gradient descent by clipping per-example gradients and adding noise, preventing the model from memorizing specific examples.</p>
-<p><img alt="Model Inversion Attack" loading="lazy" src="/blog/dp_learn/images/v2-8f23a3cb35f907140e5fdfdd704ff412_1440w.png">
-<em>Figure 2: Model inversion — attacker attempts to reconstruct training data from model parameters.</em></p>
-<h3 id="41-pytorch-experiment-opacus">4.1 PyTorch Experiment (Opacus)<a hidden class="anchor" aria-hidden="true" href="#41-pytorch-experiment-opacus">#</a></h3>
-<p>Using Opacus on MNIST, comparing standard training vs DP-SGD yields results like:</p>
+</div><p>实践建议：拉普拉斯机制适合简单统计查询，如计数、求和、直方图。用于均值时必须先裁剪或限制取值范围。</p>
+<h3 id="52-高斯机制">5.2 高斯机制<a hidden class="anchor" aria-hidden="true" href="#52-高斯机制">#</a></h3>
+<p>高斯机制输出</p>
+$$
+M(D)=f(D)+\mathcal{N}(0,\sigma^2 I).
+$$<p>它通常用于 $(\epsilon,\delta)$-DP。与拉普拉斯机制相比，高斯噪声更适合 $L_2$ 敏感度和高维向量场景，因此在 DP-SGD 中更常见。</p>
+<p>在机器学习中，加噪对象不是最终模型输出，而是每一步的裁剪后平均梯度：</p>
+$$
+\tilde{g}=\frac1B\left(\sum_{i=1}^{B}\bar{g}_i+\mathcal{N}(0,\sigma^2 C^2 I)\right),
+$$<p>其中 $B$ 是 batch size，$C$ 是裁剪阈值，$\sigma$ 是 noise multiplier。</p>
+<h3 id="53-指数机制">5.3 指数机制<a hidden class="anchor" aria-hidden="true" href="#53-指数机制">#</a></h3>
+<p>当输出不是数值，而是类别、候选项或离散选择时，可以使用指数机制。设效用函数为 $q(D,r)$，衡量输出候选 $r$ 的好坏；其敏感度为 $\Delta q$。指数机制按如下概率采样：</p>
+$$
+\Pr[M(D)=r]\propto \exp\left(\frac{\epsilon q(D,r)}{2\Delta q}\right).
+$$<p>效用越高的候选越容易被选中，但采样仍有随机性，从而限制单条记录对最终选择的影响。</p>
+<p>典型应用包括：隐私保护的投票、选择最优模型、选择特征、选择聚类中心等。它的关键是设计效用函数，并控制该函数对单条记录的敏感度。</p>
+<h2 id="6-dp-sgd深度学习中的差分隐私">6. DP-SGD：深度学习中的差分隐私<a hidden class="anchor" aria-hidden="true" href="#6-dp-sgd深度学习中的差分隐私">#</a></h2>
+<h3 id="61-标准-sgd-为什么不够">6.1 标准 SGD 为什么不够<a hidden class="anchor" aria-hidden="true" href="#61-标准-sgd-为什么不够">#</a></h3>
+<p>标准 SGD 每次用一个 batch 的梯度更新参数：</p>
+$$
+\theta_{t+1}=\theta_t-\eta \frac1B\sum_{i=1}^{B}g_i.
+$$<p>如果某个样本梯度非常特殊，它可能显著影响更新方向。模型经过多轮训练后，可能记住该样本的模式。过拟合越严重，成员推断攻击通常越容易成功。</p>
+<p><img alt="Model Inversion Attack" loading="lazy" src="/blog/dp_learn/images/v2-8f23a3cb35f907140e5fdfdd704ff412_1440w.png"></p>
+<h3 id="62-dp-sgd-的步骤">6.2 DP-SGD 的步骤<a hidden class="anchor" aria-hidden="true" href="#62-dp-sgd-的步骤">#</a></h3>
+<p>DP-SGD 每轮训练通常包含四步：</p>
+<ol>
+<li>对 batch 中每个样本计算 per-sample gradient。</li>
+<li>将每个样本梯度裁剪到范数不超过 $C$。</li>
+<li>对裁剪后的梯度和加入高斯噪声。</li>
+<li>用加噪后的平均梯度更新模型参数。</li>
+</ol>
+<p>伪代码如下：</p>
+<div class="highlight"><div style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>for each training step:
+</span></span><span style="display:flex;"><span>    sample a mini-batch
+</span></span><span style="display:flex;"><span>    for each example i:
+</span></span><span style="display:flex;"><span>        compute gradient g_i
+</span></span><span style="display:flex;"><span>        clip g_i to norm C
+</span></span><span style="display:flex;"><span>    add Gaussian noise to summed gradients
+</span></span><span style="display:flex;"><span>    average noisy gradients
+</span></span><span style="display:flex;"><span>    update model parameters
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>DP-SGD 的核心代价来自两部分：裁剪会改变真实梯度方向，噪声会增加优化方差。因此它通常会降低模型精度，尤其在数据量小、模型大、任务难或隐私预算很严格时更明显。</p>
+<h2 id="7-用-opacus-训练一个-dp-模型">7. 用 Opacus 训练一个 DP 模型<a hidden class="anchor" aria-hidden="true" href="#7-用-opacus-训练一个-dp-模型">#</a></h2>
+<h3 id="71-最小代码结构">7.1 最小代码结构<a hidden class="anchor" aria-hidden="true" href="#71-最小代码结构">#</a></h3>
+<p>Opacus 是 PyTorch 生态中常用的 DP-SGD 工具。典型流程是先定义模型、优化器和 dataloader，然后用 <code>PrivacyEngine</code> 包装训练过程。</p>
+<div class="highlight"><div style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679">35
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">torch</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">torch.nn</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">nn</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">torch.optim</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">optim</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">opacus</span> <span style="color:#ff7b72">import</span> PrivacyEngine
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>model <span style="color:#ff7b72;font-weight:bold">=</span> nn<span style="color:#ff7b72;font-weight:bold">.</span>Sequential(
+</span></span><span style="display:flex;"><span>    nn<span style="color:#ff7b72;font-weight:bold">.</span>Flatten(),
+</span></span><span style="display:flex;"><span>    nn<span style="color:#ff7b72;font-weight:bold">.</span>Linear(<span style="color:#a5d6ff">28</span> <span style="color:#ff7b72;font-weight:bold">*</span> <span style="color:#a5d6ff">28</span>, <span style="color:#a5d6ff">128</span>),
+</span></span><span style="display:flex;"><span>    nn<span style="color:#ff7b72;font-weight:bold">.</span>ReLU(),
+</span></span><span style="display:flex;"><span>    nn<span style="color:#ff7b72;font-weight:bold">.</span>Linear(<span style="color:#a5d6ff">128</span>, <span style="color:#a5d6ff">10</span>),
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>optimizer <span style="color:#ff7b72;font-weight:bold">=</span> optim<span style="color:#ff7b72;font-weight:bold">.</span>SGD(model<span style="color:#ff7b72;font-weight:bold">.</span>parameters(), lr<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0.05</span>, momentum<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0.9</span>)
+</span></span><span style="display:flex;"><span>criterion <span style="color:#ff7b72;font-weight:bold">=</span> nn<span style="color:#ff7b72;font-weight:bold">.</span>CrossEntropyLoss()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>privacy_engine <span style="color:#ff7b72;font-weight:bold">=</span> PrivacyEngine()
+</span></span><span style="display:flex;"><span>model, optimizer, train_loader <span style="color:#ff7b72;font-weight:bold">=</span> privacy_engine<span style="color:#ff7b72;font-weight:bold">.</span>make_private(
+</span></span><span style="display:flex;"><span>    module<span style="color:#ff7b72;font-weight:bold">=</span>model,
+</span></span><span style="display:flex;"><span>    optimizer<span style="color:#ff7b72;font-weight:bold">=</span>optimizer,
+</span></span><span style="display:flex;"><span>    data_loader<span style="color:#ff7b72;font-weight:bold">=</span>train_loader,
+</span></span><span style="display:flex;"><span>    noise_multiplier<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1.1</span>,
+</span></span><span style="display:flex;"><span>    max_grad_norm<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1.0</span>,
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">for</span> epoch <span style="color:#ff7b72;font-weight:bold">in</span> range(epochs):
+</span></span><span style="display:flex;"><span>    model<span style="color:#ff7b72;font-weight:bold">.</span>train()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> x, y <span style="color:#ff7b72;font-weight:bold">in</span> train_loader:
+</span></span><span style="display:flex;"><span>        optimizer<span style="color:#ff7b72;font-weight:bold">.</span>zero_grad()
+</span></span><span style="display:flex;"><span>        logits <span style="color:#ff7b72;font-weight:bold">=</span> model(x)
+</span></span><span style="display:flex;"><span>        loss <span style="color:#ff7b72;font-weight:bold">=</span> criterion(logits, y)
+</span></span><span style="display:flex;"><span>        loss<span style="color:#ff7b72;font-weight:bold">.</span>backward()
+</span></span><span style="display:flex;"><span>        optimizer<span style="color:#ff7b72;font-weight:bold">.</span>step()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    epsilon <span style="color:#ff7b72;font-weight:bold">=</span> privacy_engine<span style="color:#ff7b72;font-weight:bold">.</span>get_epsilon(delta<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1e-5</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;epoch=</span><span style="color:#a5d6ff">{</span>epoch<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">, epsilon=</span><span style="color:#a5d6ff">{</span>epsilon<span style="color:#a5d6ff">:</span><span style="color:#a5d6ff">.2f</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="72-关键参数如何理解">7.2 关键参数如何理解<a hidden class="anchor" aria-hidden="true" href="#72-关键参数如何理解">#</a></h3>
 <table>
   <thead>
       <tr>
-          <th style="text-align: left">Setup</th>
-          <th style="text-align: center">Accuracy</th>
-          <th style="text-align: left">Privacy Strength</th>
+          <th style="text-align: left">参数</th>
+          <th style="text-align: left">作用</th>
+          <th style="text-align: left">调大后的影响</th>
+          <th style="text-align: left">调小后的影响</th>
       </tr>
   </thead>
   <tbody>
       <tr>
-          <td style="text-align: left">Normal SGD</td>
-          <td style="text-align: center">96.27%</td>
-          <td style="text-align: left">Weak (vulnerable to membership inference)</td>
+          <td style="text-align: left"><code>noise_multiplier</code></td>
+          <td style="text-align: left">高斯噪声强度</td>
+          <td style="text-align: left">隐私更强，精度可能下降</td>
+          <td style="text-align: left">精度可能更好，隐私变弱</td>
       </tr>
       <tr>
-          <td style="text-align: left">DP-SGD</td>
-          <td style="text-align: center">89.16%</td>
-          <td style="text-align: left">Strong ($\epsilon=2.0$)</td>
+          <td style="text-align: left"><code>max_grad_norm</code></td>
+          <td style="text-align: left">梯度裁剪阈值</td>
+          <td style="text-align: left">裁剪更少，但需要更大噪声</td>
+          <td style="text-align: left">裁剪更强，可能欠拟合</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">batch size</td>
+          <td style="text-align: left">每步样本数</td>
+          <td style="text-align: left">梯度更稳定，但采样率变化会影响会计</td>
+          <td style="text-align: left">噪声影响更明显</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">epochs</td>
+          <td style="text-align: left">训练轮数</td>
+          <td style="text-align: left">精度可能提升，但隐私预算消耗增加</td>
+          <td style="text-align: left">隐私消耗少，但可能未收敛</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">learning rate</td>
+          <td style="text-align: left">更新步长</td>
+          <td style="text-align: left">收敛快但不稳定</td>
+          <td style="text-align: left">稳定但可能慢</td>
       </tr>
   </tbody>
 </table>
-<p>Introducing DP typically reduces predictive accuracy because noisy gradients perturb the optimization direction. Practical work requires tuning $\epsilon$ and the noise multiplier to balance privacy and utility.</p>
-<hr>
-<h2 id="5-summary-and-perspectives">5. Summary and Perspectives<a hidden class="anchor" aria-hidden="true" href="#5-summary-and-perspectives">#</a></h2>
-<p>Differential Privacy provides rigorous privacy guarantees, but the utility–privacy trade-off remains a central challenge. Future research directions include:</p>
+<p>实践中不要只调 <code>epsilon</code>。更常见的流程是先设定隐私目标，再搜索 <code>noise_multiplier</code>、<code>max_grad_norm</code>、batch size 和学习率。</p>
+<h3 id="73-一个可执行的调参顺序">7.3 一个可执行的调参顺序<a hidden class="anchor" aria-hidden="true" href="#73-一个可执行的调参顺序">#</a></h3>
 <ol>
-<li>Improved noise distributions to reduce impact on convergence for large models (e.g., LLMs).</li>
-<li>Adaptive sensitivity control that dynamically allocates privacy budget across training rounds.</li>
+<li>先训练非 DP baseline，确认模型和数据管道正常。</li>
+<li>固定模型结构和 batch size，加入 DP-SGD。</li>
+<li>从 <code>max_grad_norm=1.0</code>、<code>noise_multiplier=1.0</code> 附近开始。</li>
+<li>若训练 loss 不下降，先调学习率和裁剪阈值，不要马上降低噪声。</li>
+<li>若 epsilon 太大，提高 noise multiplier 或减少 epochs。</li>
+<li>若精度下降过多，尝试更小模型、更强正则、更好预训练或更大数据量。</li>
 </ol>
-<p>Choosing privacy parameters is both a technical and an ethical decision: it requires balancing model performance and users&rsquo; privacy rights.</p>
-<hr>
-<h3 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h3>
-<p>[1] Xin Bangzhou. Research on Differential Privacy Techniques in Machine Learning [D]. University of Science and Technology of China, 2022.</p>
-<p>[2] Li Xiaoguang, Li Hui, et al. A Survey on Differential Privacy [J]. Journal of Information Security, 2018.</p>
-<hr>
+<h2 id="8-结果解释精度下降不是失败">8. 结果解释：精度下降不是失败<a hidden class="anchor" aria-hidden="true" href="#8-结果解释精度下降不是失败">#</a></h2>
+<p>假设在 MNIST 上比较标准 SGD 和 DP-SGD，可能得到类似结果：</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">设置</th>
+          <th style="text-align: center">测试准确率</th>
+          <th style="text-align: left">隐私说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">标准 SGD</td>
+          <td style="text-align: center">96% 左右</td>
+          <td style="text-align: left">没有显式 DP 保证</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">DP-SGD</td>
+          <td style="text-align: center">88% 到 92%</td>
+          <td style="text-align: left">取决于 $\epsilon,\delta$ 和噪声强度</td>
+      </tr>
+  </tbody>
+</table>
+<p>这种差距并不意外。DP 的目标不是免费提升泛化，而是在可接受性能下给出可审计的个体隐私保护。对于医疗、金融和用户行为数据，牺牲少量精度换取明确隐私边界通常是合理的工程选择。</p>
+<p>需要避免一种错误表达：不能只说“我们加了噪声，所以保护隐私”。严谨表述应包含邻接定义、机制、$\epsilon,\delta$、隐私会计方法、训练轮数、采样率和裁剪阈值。</p>
+<h2 id="9-常见误区">9. 常见误区<a hidden class="anchor" aria-hidden="true" href="#9-常见误区">#</a></h2>
+<h3 id="91-只对最终模型参数加噪">9.1 只对最终模型参数加噪<a hidden class="anchor" aria-hidden="true" href="#91-只对最终模型参数加噪">#</a></h3>
+<p>训练完成后再给模型参数加一点噪声，通常不能提供可靠 DP 保证。因为模型在训练过程中已经充分接触原始数据，可能已经记住敏感样本。DP-SGD 的关键是在每一步优化时控制单样本贡献并加噪。</p>
+<h3 id="92-不裁剪梯度就加噪">9.2 不裁剪梯度就加噪<a hidden class="anchor" aria-hidden="true" href="#92-不裁剪梯度就加噪">#</a></h3>
+<p>没有裁剪就没有稳定敏感度上界。噪声尺度无法校准，隐私保证也不成立。</p>
+<h3 id="93-只报告-epsilon不报告-delta">9.3 只报告 epsilon，不报告 delta<a hidden class="anchor" aria-hidden="true" href="#93-只报告-epsilon不报告-delta">#</a></h3>
+<p>$(\epsilon,\delta)$ 是一组参数。只报告 $\epsilon$ 会隐藏失败概率假设。还应报告数据集规模和 $\delta$ 的选取理由。</p>
+<h3 id="94-把-dp-当成防御所有攻击的方法">9.4 把 DP 当成防御所有攻击的方法<a hidden class="anchor" aria-hidden="true" href="#94-把-dp-当成防御所有攻击的方法">#</a></h3>
+<p>差分隐私主要限制个体参与信息泄露，不等于防止模型被盗、不等于防止提示注入、不等于防止训练数据本身被系统管理员看到。完整隐私系统通常还需要访问控制、加密、安全审计、数据最小化和合规流程。</p>
+<h2 id="10-实践清单">10. 实践清单<a hidden class="anchor" aria-hidden="true" href="#10-实践清单">#</a></h2>
+<p>如果要在项目中使用差分隐私，可以按下面清单推进：</p>
+<ol>
+<li>明确保护对象：保护用户是否参与训练，还是保护具体属性值？</li>
+<li>明确数据边界：一条 record 是一个样本、一个用户，还是一个用户的所有样本？</li>
+<li>选择邻接定义：add/remove 还是 replace-one。</li>
+<li>对输入做裁剪或范围限制，确保敏感度可控。</li>
+<li>选择机制：简单统计用拉普拉斯或高斯机制；模型训练用 DP-SGD；离散选择用指数机制。</li>
+<li>记录隐私会计方法和最终 $\epsilon,\delta$。</li>
+<li>与非 DP baseline 对比，报告精度、训练稳定性和隐私预算。</li>
+<li>做成员推断攻击评估，验证 DP 是否降低攻击成功率。</li>
+<li>保留实验配置，确保隐私声明可复现。</li>
+</ol>
+<h2 id="11-小结">11. 小结<a hidden class="anchor" aria-hidden="true" href="#11-小结">#</a></h2>
+<p>差分隐私的核心思想是限制单条记录对输出分布的影响。敏感度决定噪声尺度，隐私预算控制可区分程度，组合定理解释多次查询或多轮训练时隐私如何累积。对于机器学习，DP-SGD 通过 per-sample gradient clipping 和 Gaussian noise 把这个思想嵌入优化过程。</p>
+<p>实际使用 DP 时，最重要的是完整报告：数据邻接定义、裁剪阈值、噪声强度、采样率、训练轮数、会计方法和最终 $\epsilon,\delta$。只有这些信息齐全，隐私保证才是可解释、可复现、可审计的。</p>
+<h2 id="参考文献">参考文献<a hidden class="anchor" aria-hidden="true" href="#参考文献">#</a></h2>
+<p>[1] Cynthia Dwork. Differential Privacy. <em>ICALP</em>, 2006.</p>
+<p>[2] Cynthia Dwork, Aaron Roth. <em>The Algorithmic Foundations of Differential Privacy</em>. Now Publishers, 2014.</p>
+<p>[3] Frank McSherry, Kunal Talwar. Mechanism Design via Differential Privacy. <em>FOCS</em>, 2007.</p>
+<p>[4] Martin Abadi, Andy Chu, Ian Goodfellow, H. Brendan McMahan, Ilya Mironov, Kunal Talwar, Li Zhang. Deep Learning with Differential Privacy. <em>ACM CCS</em>, 2016.</p>
+<p>[5] Ilya Mironov. Rényi Differential Privacy. <em>IEEE CSF</em>, 2017.</p>
+<p>[6] H. Brendan McMahan, Daniel Ramage, Kunal Talwar, Li Zhang. Learning Differentially Private Recurrent Language Models. <em>ICLR</em>, 2018.</p>
+<p>[7] Nicholas Carlini, Chang Liu, Úlfar Erlingsson, Jernej Kos, Dawn Song. The Secret Sharer: Evaluating and Testing Unintended Memorization in Neural Networks. <em>USENIX Security</em>, 2019.</p>
+<p>[8] Opacus Team. <em>Opacus: User-Friendly Differential Privacy Library in PyTorch</em>. Meta AI.</p>
+<p>[9] Bangzhou Xin. Research on Differential Privacy Techniques in Machine Learning. University of Science and Technology of China, 2022.</p>
+<p>[10] Xiaoguang Li, Hui Li, et al. A Survey on Differential Privacy. <em>Journal of Information Security</em>, 2018.</p>
 
 
+      </div>
+    </div>
+    <aside class="article-toc" aria-label="Table of Contents"><details class="toc"  open>
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#写在前面">写在前面</a></li>
+    <li><a href="#1-隐私风险从哪里来">1. 隐私风险从哪里来</a>
+      <ul>
+        <li><a href="#11-成员推断攻击">1.1 成员推断攻击</a></li>
+        <li><a href="#12-模型反演与梯度泄露">1.2 模型反演与梯度泄露</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-差分隐私的形式化定义">2. 差分隐私的形式化定义</a>
+      <ul>
+        <li><a href="#21-相邻数据集">2.1 相邻数据集</a></li>
+        <li><a href="#22--差分隐私">2.2 -差分隐私</a></li>
+        <li><a href="#23-隐私损失随机变量">2.3 隐私损失随机变量</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-差分隐私的三个基本性质">3. 差分隐私的三个基本性质</a>
+      <ul>
+        <li><a href="#31-后处理不损害隐私">3.1 后处理不损害隐私</a></li>
+        <li><a href="#32-组合会消耗隐私预算">3.2 组合会消耗隐私预算</a></li>
+        <li><a href="#33-并行组合可以节省预算">3.3 并行组合可以节省预算</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-敏感度噪声尺度的来源">4. 敏感度：噪声尺度的来源</a>
+      <ul>
+        <li><a href="#41-全局敏感度">4.1 全局敏感度</a></li>
+        <li><a href="#42-裁剪是机器学习中的敏感度控制">4.2 裁剪是机器学习中的敏感度控制</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-基本机制">5. 基本机制</a>
+      <ul>
+        <li><a href="#51-拉普拉斯机制">5.1 拉普拉斯机制</a></li>
+        <li><a href="#52-高斯机制">5.2 高斯机制</a></li>
+        <li><a href="#53-指数机制">5.3 指数机制</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-dp-sgd深度学习中的差分隐私">6. DP-SGD：深度学习中的差分隐私</a>
+      <ul>
+        <li><a href="#61-标准-sgd-为什么不够">6.1 标准 SGD 为什么不够</a></li>
+        <li><a href="#62-dp-sgd-的步骤">6.2 DP-SGD 的步骤</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-用-opacus-训练一个-dp-模型">7. 用 Opacus 训练一个 DP 模型</a>
+      <ul>
+        <li><a href="#71-最小代码结构">7.1 最小代码结构</a></li>
+        <li><a href="#72-关键参数如何理解">7.2 关键参数如何理解</a></li>
+        <li><a href="#73-一个可执行的调参顺序">7.3 一个可执行的调参顺序</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-结果解释精度下降不是失败">8. 结果解释：精度下降不是失败</a></li>
+    <li><a href="#9-常见误区">9. 常见误区</a>
+      <ul>
+        <li><a href="#91-只对最终模型参数加噪">9.1 只对最终模型参数加噪</a></li>
+        <li><a href="#92-不裁剪梯度就加噪">9.2 不裁剪梯度就加噪</a></li>
+        <li><a href="#93-只报告-epsilon不报告-delta">9.3 只报告 epsilon，不报告 delta</a></li>
+        <li><a href="#94-把-dp-当成防御所有攻击的方法">9.4 把 DP 当成防御所有攻击的方法</a></li>
+      </ul>
+    </li>
+    <li><a href="#10-实践清单">10. 实践清单</a></li>
+    <li><a href="#11-小结">11. 小结</a></li>
+    <li><a href="#参考文献">参考文献</a></li>
+  </ul>
+</nav>
+    </div>
+</details>
+
+    </aside>
   </div>
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="/tags/differential-privacy/">Differential Privacy</a></li>
-      <li><a href="/tags/privacy-protection/">Privacy Protection</a></li>
+      <li><a href="/tags/%E5%B7%AE%E5%88%86%E9%9A%90%E7%A7%81/">差分隐私</a></li>
+      <li><a href="/tags/%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4/">隐私保护</a></li>
       <li><a href="/tags/pytorch/">PyTorch</a></li>
     </ul>
   </footer>

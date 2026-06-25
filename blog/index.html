@@ -10,17 +10,16 @@
 <meta name="description" content="My Blog Pages">
 <meta name="author" content="">
 <link rel="canonical" href="/blog/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.b16c47749748b643269a4a56f461c892192ea57cb415aee62e6b40487ce839e4.css" integrity="sha256-sWxHdJdItkMmmkpW9GHIkhkupXy0Fa7mLmtASHzoOeQ=" rel="preload stylesheet" as="style">
-<link rel="icon" href="/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.1de22ecb3cf965fc8718e64431788320f6a61a65363087f34867ab4feda76274.css" integrity="sha256-HeIuyzz5ZfyHGOZEMXiDIPamGmU2MIfzSGerT&#43;2nYnQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="/img/avatar03.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/img/avatar03.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/img/avatar03.png">
+<link rel="apple-touch-icon" href="/img/avatar03.png">
 <link rel="mask-icon" href="/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
 <link rel="alternate" type="application/rss+xml" href="/blog/index.xml" title="rss">
 <link rel="alternate" hreflang="en" href="/blog/">
-<link rel="alternate" hreflang="zh" href="/zh/blog/">
 <noscript>
     <style>
         #theme-toggle,
@@ -69,17 +68,19 @@
 </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         renderMathInElement(document.body, {
             delimiters: [
                 {left: "$$", right: "$$", display: true},
                 {left: "$", right: "$", display: false}
-            ]
+            ],
+            throwOnError: false
         });
     });
 </script>
+
 
 
 
@@ -95,22 +96,7 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Blog">
   <meta name="twitter:description" content="My Blog Pages">
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position":  1 ,
-      "name": "Blog",
-      "item": "/blog/"
-    }
-  ]
-}
-</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","description":"My Blog Pages","name":"Blog","url":"/blog/"}</script>
 </head>
 <body class="list" id="top">
     <header class="header">
@@ -137,13 +123,7 @@
                         <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
                         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
                     </svg>
-                </button><span class="nav-sep">|</span>
-                    <ul class="lang-menu">
-                        <li>
-                            <a href="/zh/" title="Zh"
-                                aria-label="Zh">Zh</a>
-                        </li>
-                    </ul>
+                </button>
             </div>
         </div>
         <ul id="menu" class="menu">
@@ -191,19 +171,28 @@
                 alt="Differential Privacy Concept">
 </figure>
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Fundamentals of Differential Privacy: From Definitions to ML Applications
+    <h2 class="entry-hint-parent">差分隐私基础：从数学定义到机器学习实践
     </h2>
   </header>
   <div class="entry-content">
-    <p>July 8, 2025
-Introduction With the proliferation of intelligent devices, data volume has grown explosively, providing rich training material for machine learning. However, training datasets often contain sensitive information and therefore pose serious privacy risks. For example, membership inference attacks can infer whether an individual’s data was used to train a model.
-In IoT settings, federated learning keeps raw data local, but research shows that exchanged model updates (gradients) can still leak information. Traditional cryptographic methods are often too computationally heavy for realtime training. Differential Privacy (DP) offers mathematically provable privacy guarantees by introducing calibrated randomness, making it a mainstream approach to balance data utility and privacy.
+    <p>写在前面 机器学习系统越来越依赖真实用户数据：医疗图像、位置轨迹、搜索日志、推荐行为、设备传感器和文本交互都可能进入训练流程。数据越细，模型越容易学到有用模式，也越可能记住个体信息。攻击者不一定需要拿到原始数据，只要能访问模型输出、梯度更新或模型参数，就可能推断某个样本是否参与训练，甚至重构训练样本的部分特征。
+差分隐私（Differential Privacy, DP）提供了一种可证明的隐私保护框架。它的核心目标不是让数据“绝对不可见”，而是限制单个个体对算法输出的影响：无论某个人的数据是否出现在数据集中，外部观察者看到输出后都不应显著改变对这个人的判断。
+本文按“定义、机制、组合、机器学习实践”的顺序展开。重点不是堆概念，而是回答三个实践问题：
+$\epsilon,\delta$ 到底控制什么？ 噪声为什么要按敏感度来加？ 在深度学习中如何使用 DP-SGD，并避免常见误区？ 1. 隐私风险从哪里来 1.1 成员推断攻击 成员推断攻击（membership inference attack）试图判断某条记录是否在训练集中出现过。若模型对训练样本的置信度系统性高于未见样本，攻击者就可以利用输出概率、损失值或预测排名进行判断。
+例如，一个疾病风险预测模型若对某个病人的记录表现出异常高的确定性，攻击者可能推断该病人曾参与某个敏感医疗数据集。即便模型没有直接输出训练数据，这种参与关系本身也可能是隐私信息。
+1.2 模型反演与梯度泄露 模型反演攻击（model inversion）尝试根据模型输出恢复输入特征；梯度泄露攻击则利用联邦学习或分布式训练中的梯度更新重构训练样本。研究表明，在小批量训练、过参数化模型和高维输入场景中，梯度可能携带大量样本信息。
+联邦学习只能减少原始数据离开本地设备的风险，并不自动保证隐私。如果上传的梯度或模型更新没有额外保护，攻击者仍然可能从更新中推断本地数据。因此，联邦学习常与安全聚合、差分隐私和可信执行环境组合使用。
+2. 差分隐私的形式化定义 2.1 相邻数据集 差分隐私比较的是两个相邻数据集 $D$ 和 $D^{\prime}$。常见定义有两种：
+add/remove 邻接：$D^{\prime}$ 比 $D$ 多或少一条记录。 replace-one 邻接：$D$ 和 $D^{\prime}$ 记录数相同，但其中一条记录不同。 不同邻接定义会影响敏感度和隐私预算解释。阅读论文或工具文档时，需要确认使用的是哪一种。
+2.2 $(\epsilon,\delta)$-差分隐私 随机算法 $M$ 满足 $(\epsilon,\delta)$-差分隐私，若对任意相邻数据集 $D,D^{\prime}$ 和任意输出集合 $S$，都有
+$$ \Pr[M(D)\in S]\le e^\epsilon \Pr[M(D^{\prime})\in S]&#43;\delta. $$其中：
+$\epsilon$ 控制输出分布的最大可区分程度。越小，隐私越强，噪声通常越大。 $\delta$ 是允许极小概率失败的松弛项。实际中通常要求 $\delta$ 小于数据集规模倒数，例如 $\delta &lt; 1/n$ 或更严格。 当 $\delta=0$ 时，称为纯差分隐私（pure DP）；当 $\delta&gt;0$ 时，称为近似差分隐私（approximate DP）。深度学习中常用的是近似 DP，因为高斯机制和 DP-SGD 更自然地落在 $(\epsilon,\delta)$ 框架下。
 ...</p>
   </div>
   <footer class="entry-footer">
 
 <span title='2025-07-08 00:00:00 +0000 UTC'>July 8, 2025</span>&nbsp;·&nbsp;<span>4 min</span></footer>
-  <a class="entry-link" aria-label="post link to Fundamentals of Differential Privacy: From Definitions to ML Applications" href="/blog/dp_learn/"></a>
+  <a class="entry-link" aria-label="post link to 差分隐私基础：从数学定义到机器学习实践" href="/blog/dp_learn/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -216,20 +205,28 @@ In IoT settings, federated learning keeps raw data local, but research shows tha
                 alt="">
 </figure>
   <header class="entry-header">
-    <h2 class="entry-hint-parent">A Brief Discussion on Affine Transformations
+    <h2 class="entry-hint-parent">仿射变换入门：从坐标、矩阵到椭圆与不变量
     </h2>
   </header>
   <div class="entry-content">
-    <p>March 8, 2024
-1. Preliminary Knowledge 1.1 About Coordinates To describe the position of a point P in the plane xOy we introduce coordinates. For example, how are the coordinates (4, 3) of point P obtained?
-Intuitively, starting from the origin, P moves 4 units along the positive x-axis and then 3 units along the positive y-axis to reach (4, 3).
-Alternatively, in terms of vectors, let \overrightarrow{i}, \overrightarrow{j} be an orthonormal basis of the xOy coordinate system. Then
+    <p>写在前面 仿射变换（affine transformation）是线性代数和几何之间非常实用的一座桥。它既可以解释“换坐标系后为什么同一个点会有不同坐标”，也可以解释图像处理中常见的平移、旋转、缩放、错切、投影近似和椭圆生成。理解仿射变换的关键不是记公式，而是把三件事分清：
+点本身是几何对象，坐标只是它在某个坐标系下的表示。 矩阵描述的是“基向量如何被送到新的方向和尺度”。 仿射变换保持直线、平行性和线段比例，但通常不保持长度、角度和圆。 本文从最基础的坐标和矩阵讲起，然后推到直线、面积、圆锥曲线和实际编程。目标是：读完之后能把仿射变换用于推导，也能把它写进代码。
+1. 坐标：点不变，表示会变 1.1 坐标依赖于基底 在平面直角坐标系 $xOy$ 中，点 $P=(4,3)$ 通常被理解为：从原点出发，沿 $x$ 轴正方向走 4 个单位，再沿 $y$ 轴正方向走 3 个单位。
+用向量语言写，若 $\vec{i},\vec{j}$ 是标准正交基，则
+$$ \overrightarrow{OP}=4\vec{i}&#43;3\vec{j}. $$如果换一组基底，例如
+$$ \vec{i}^{\prime}=2\vec{i},\qquad \vec{j}^{\prime}=\frac12\vec{j}, $$则同一个向量也可以写成
+$$ \overrightarrow{OP}=2\vec{i}^{\prime}&#43;6\vec{j}^{\prime}. $$所以同一个点在新基底下的坐标变成 $(2,6)$。这不是点移动了，而是表示方式变了。很多几何问题容易混乱，就是因为把“点的运动”和“坐标表示的改变”混在一起。
+1.2 主动变换与被动变换 理解仿射变换时，建议区分两种视角：
+主动变换：点真的被送到另一个位置。例如把图形旋转 30 度。 被动变换：点不动，只是观察它的坐标系变了。例如把坐标轴旋转 30 度。 两者公式很像，但矩阵方向往往相反。工程实践中，大多数图形库采用主动变换：给定点坐标 $x$，计算变换后的点 $x^{\prime}$。数学推导中，换基和坐标变换经常采用被动视角。写代码时必须确认自己使用的是列向量约定还是行向量约定，否则旋转方向、矩阵乘法顺序都会出错。
+2. 线性方程组与行列式 2.1 二阶行列式的几何意义 二阶矩阵
+$$ A= \begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix} $$的行列式为
+$$ \det(A)=ad-bc. $$它的几何意义是面积缩放因子。若两个基向量张成的平行四边形原面积为 1，经过矩阵 $A$ 变换后面积变成 $|\det(A)|$。符号则表示方向是否翻转：$\det(A)&gt;0$ 保持方向，$\det(A)&lt;0$ 翻转方向，$\det(A)=0$ 会把平面压扁到一条线或一个点。
 ...</p>
   </div>
   <footer class="entry-footer">
 
 <span title='2024-03-08 00:00:00 +0000 UTC'>March 8, 2024</span>&nbsp;·&nbsp;<span>4 min</span></footer>
-  <a class="entry-link" aria-label="post link to A Brief Discussion on Affine Transformations" href="/blog/affine_geometry/"></a>
+  <a class="entry-link" aria-label="post link to 仿射变换入门：从坐标、矩阵到椭圆与不变量" href="/blog/affine_geometry/"></a>
 </article>
     </main>
     

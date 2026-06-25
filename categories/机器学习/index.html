@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>机器学习 | Yingrui Chen</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="canonical" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.1de22ecb3cf965fc8718e64431788320f6a61a65363087f34867ab4feda76274.css" integrity="sha256-HeIuyzz5ZfyHGOZEMXiDIPamGmU2MIfzSGerT&#43;2nYnQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="/img/avatar03.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/img/avatar03.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/img/avatar03.png">
+<link rel="apple-touch-icon" href="/img/avatar03.png">
+<link rel="mask-icon" href="/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/index.xml" title="rss">
+<link rel="alternate" hreflang="en" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"><meta property="og:url" content="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+  <meta property="og:site_name" content="Yingrui Chen">
+  <meta property="og:title" content="机器学习">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="website">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="机器学习">
+
+</head>
+<body class="list" id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="/" accesskey="h" title="Yingrui Chen (Alt + H)">Yingrui Chen</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="/research" title="Research">
+                    <span>Research</span>
+                </a>
+            </li>
+            <li>
+                <a href="/blog" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="/projects" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header"><nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/categories/">Categories</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
+  <h1>
+    机器学习
+  </h1>
+</header>
+
+<article class="post-entry tag-entry"> 
+<figure class="entry-cover">
+            <img loading="lazy"
+                srcset='/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w_hu_7e7f65a8c4ca7be2.png 360w,/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w_hu_18f99f49f613d144.png 480w,/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w_hu_44094ec47fb43af9.png 720w,/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w_hu_7abeec7cd3017f31.png 1080w,/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w.png 1156w'
+                src="/blog/dp_learn/images/v2-90e89c9f3df24dbff71538e723fcfa55_1440w.png"
+                sizes="(min-width: 768px) 720px, 100vw"
+                width="1156" height="908"
+                alt="Differential Privacy Concept">
+</figure>
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">差分隐私基础：从数学定义到机器学习实践
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>写在前面 机器学习系统越来越依赖真实用户数据：医疗图像、位置轨迹、搜索日志、推荐行为、设备传感器和文本交互都可能进入训练流程。数据越细，模型越容易学到有用模式，也越可能记住个体信息。攻击者不一定需要拿到原始数据，只要能访问模型输出、梯度更新或模型参数，就可能推断某个样本是否参与训练，甚至重构训练样本的部分特征。
+差分隐私（Differential Privacy, DP）提供了一种可证明的隐私保护框架。它的核心目标不是让数据“绝对不可见”，而是限制单个个体对算法输出的影响：无论某个人的数据是否出现在数据集中，外部观察者看到输出后都不应显著改变对这个人的判断。
+本文按“定义、机制、组合、机器学习实践”的顺序展开。重点不是堆概念，而是回答三个实践问题：
+$\epsilon,\delta$ 到底控制什么？ 噪声为什么要按敏感度来加？ 在深度学习中如何使用 DP-SGD，并避免常见误区？ 1. 隐私风险从哪里来 1.1 成员推断攻击 成员推断攻击（membership inference attack）试图判断某条记录是否在训练集中出现过。若模型对训练样本的置信度系统性高于未见样本，攻击者就可以利用输出概率、损失值或预测排名进行判断。
+例如，一个疾病风险预测模型若对某个病人的记录表现出异常高的确定性，攻击者可能推断该病人曾参与某个敏感医疗数据集。即便模型没有直接输出训练数据，这种参与关系本身也可能是隐私信息。
+1.2 模型反演与梯度泄露 模型反演攻击（model inversion）尝试根据模型输出恢复输入特征；梯度泄露攻击则利用联邦学习或分布式训练中的梯度更新重构训练样本。研究表明，在小批量训练、过参数化模型和高维输入场景中，梯度可能携带大量样本信息。
+联邦学习只能减少原始数据离开本地设备的风险，并不自动保证隐私。如果上传的梯度或模型更新没有额外保护，攻击者仍然可能从更新中推断本地数据。因此，联邦学习常与安全聚合、差分隐私和可信执行环境组合使用。
+2. 差分隐私的形式化定义 2.1 相邻数据集 差分隐私比较的是两个相邻数据集 $D$ 和 $D^{\prime}$。常见定义有两种：
+add/remove 邻接：$D^{\prime}$ 比 $D$ 多或少一条记录。 replace-one 邻接：$D$ 和 $D^{\prime}$ 记录数相同，但其中一条记录不同。 不同邻接定义会影响敏感度和隐私预算解释。阅读论文或工具文档时，需要确认使用的是哪一种。
+2.2 $(\epsilon,\delta)$-差分隐私 随机算法 $M$ 满足 $(\epsilon,\delta)$-差分隐私，若对任意相邻数据集 $D,D^{\prime}$ 和任意输出集合 $S$，都有
+$$ \Pr[M(D)\in S]\le e^\epsilon \Pr[M(D^{\prime})\in S]&#43;\delta. $$其中：
+$\epsilon$ 控制输出分布的最大可区分程度。越小，隐私越强，噪声通常越大。 $\delta$ 是允许极小概率失败的松弛项。实际中通常要求 $\delta$ 小于数据集规模倒数，例如 $\delta &lt; 1/n$ 或更严格。 当 $\delta=0$ 时，称为纯差分隐私（pure DP）；当 $\delta&gt;0$ 时，称为近似差分隐私（approximate DP）。深度学习中常用的是近似 DP，因为高斯机制和 DP-SGD 更自然地落在 $(\epsilon,\delta)$ 框架下。
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2025-07-08 00:00:00 +0000 UTC'>July 8, 2025</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to 差分隐私基础：从数学定义到机器学习实践" href="/blog/dp_learn/"></a>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="/">Yingrui Chen</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
