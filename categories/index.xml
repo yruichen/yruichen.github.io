@@ -6,8 +6,22 @@
     <description>Recent content in Categories on Yingrui Chen</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 08 Jul 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 09 Jul 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Milestones</title>
+      <link>/categories/milestones/</link>
+      <pubDate>Thu, 09 Jul 2026 00:00:00 +0000</pubDate>
+      <guid>/categories/milestones/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Projects</title>
+      <link>/categories/projects/</link>
+      <pubDate>Thu, 09 Jul 2026 00:00:00 +0000</pubDate>
+      <guid>/categories/projects/</guid>
+      <description></description>
+    </item>
     <item>
       <title>安全</title>
       <link>/categories/%E5%AE%89%E5%85%A8/</link>

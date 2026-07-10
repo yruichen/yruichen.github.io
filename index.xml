@@ -6,8 +6,22 @@
     <description>Recent content on Yingrui Chen</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 23 May 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 09 Jul 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Marketing Hub Won Gold at the Guangzhou TeamOne AI Technology Challenge</title>
+      <link>/blog/marketing-hub-teamone-gold/</link>
+      <pubDate>Thu, 09 Jul 2026 00:00:00 +0000</pubDate>
+      <guid>/blog/marketing-hub-teamone-gold/</guid>
+      <description>Our three-person team won the Gold Award at the Guangzhou TeamOne AI Technology Challenge for Marketing Hub, with a RMB 50,000 prize.</description>
+    </item>
+    <item>
+      <title>My First Delivered Project: Rocket 3D Reconstruction System at XIOPM</title>
+      <link>/blog/xioptics-rocket-3d-reconstruction-delivery/</link>
+      <pubDate>Wed, 08 Jul 2026 00:00:00 +0000</pubDate>
+      <guid>/blog/xioptics-rocket-3d-reconstruction-delivery/</guid>
+      <description>I completed the on-site delivery of the Rocket 3D Reconstruction System at the Xi&amp;#39;an Institute of Optics and Precision Mechanics, Chinese Academy of Sciences.</description>
+    </item>
     <item>
       <title>Intelligent Government Service Assistant</title>
       <link>/projects/intelligent-government-assistant/</link>
