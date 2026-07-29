@@ -10,7 +10,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="canonical" href="/tags/mindspore/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.e593d28eadfe27a964ac428a7f6dbfd98a2490369d4dda09271c10de45809959.css" integrity="sha256-5ZPSjq3&#43;J6lkrEKKf22/2YokkDadTdoJJxwQ3kWAmVk=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.fb553ec40ec4fc3cb03cd73dfee9e5565d66663b5101a13bfac7c2f7d479b61c.css" integrity="sha256-&#43;1U&#43;xA7E/DywPNc9/unlVl1mZjtRAaE7&#43;sfC99R5thw=" rel="preload stylesheet" as="style">
 <link rel="icon" href="/img/logo-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/img/logo-16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/img/logo-32.png">
@@ -211,7 +211,196 @@ Automated workflow processing through Agent collaboration. Built to enhance acce
         <polyline points="17 11 12 6 7 11"></polyline>
         <polyline points="17 18 12 13 7 18"></polyline>
     </svg>
-</a>
+</a><script>
+  (() => {
+    const figures = document.querySelectorAll(
+      ".has-adaptive-images .post-content > figure.article-figure--portrait:not(:last-child)"
+    );
+    const pairs = [];
+
+    figures.forEach((figure) => {
+      const paragraph = figure.nextElementSibling;
+      if (!paragraph || paragraph.tagName !== "P") return;
+
+      const pair = document.createElement("div");
+      pair.className = "article-media-pair";
+
+      if (figure.classList.contains("article-figure--float-right")) {
+        pair.classList.add("article-media-pair--figure-right");
+      }
+
+      figure.before(pair);
+      pair.append(figure, paragraph);
+      pairs.push({ pair, figure, paragraph });
+    });
+
+    if (!pairs.length) return;
+
+    const desktopLayout = window.matchMedia("(min-width: 761px)");
+    let resizeFrame;
+
+    const fitImagesToText = () => {
+      window.cancelAnimationFrame(resizeFrame);
+      resizeFrame = window.requestAnimationFrame(() => {
+        pairs.forEach(({ figure, paragraph }) => {
+          if (!desktopLayout.matches) {
+            figure.style.removeProperty("--paired-image-max-height");
+            return;
+          }
+
+          const caption = figure.querySelector("figcaption");
+          let captionHeight = 0;
+
+          if (caption) {
+            const captionStyle = window.getComputedStyle(caption);
+            captionHeight =
+              caption.getBoundingClientRect().height +
+              parseFloat(captionStyle.marginTop) +
+              parseFloat(captionStyle.marginBottom);
+          }
+
+          const paragraphHeight = paragraph.getBoundingClientRect().height;
+          const imageHeight = Math.max(300, Math.floor(paragraphHeight - captionHeight));
+          figure.style.setProperty("--paired-image-max-height", `${imageHeight}px`);
+        });
+      });
+    };
+
+    fitImagesToText();
+    window.addEventListener("resize", fitImagesToText, { passive: true });
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(fitImagesToText);
+    }
+  })();
+</script>
+
+<script>
+  (() => {
+    const article = document.querySelector(".post-single.has-image-lightbox");
+    if (!article || typeof HTMLDialogElement === "undefined") return;
+
+    const images = Array.from(
+      document.querySelectorAll(
+        ".post-single.has-image-lightbox .post-content img, " +
+        ".post-single.has-image-lightbox > .post-hero .entry-cover img, " +
+        ".post-single.has-image-lightbox > .entry-cover img"
+      )
+    );
+    if (!images.length) return;
+
+    const dialog = document.createElement("dialog");
+    dialog.className = "image-lightbox";
+    dialog.setAttribute("aria-label", "Image preview");
+    dialog.innerHTML = `
+      <button class="image-lightbox__close" type="button" aria-label="Close image preview">&times;</button>
+      <figure class="image-lightbox__frame">
+        <img class="image-lightbox__image" alt="">
+        <figcaption class="image-lightbox__caption"></figcaption>
+      </figure>
+    `;
+    document.body.append(dialog);
+
+    const preview = dialog.querySelector(".image-lightbox__image");
+    const caption = dialog.querySelector(".image-lightbox__caption");
+    const closeButton = dialog.querySelector(".image-lightbox__close");
+    let trigger = null;
+
+    const imageCaption = (image) => {
+      const figureCaption = image.closest("figure")?.querySelector("figcaption");
+      return figureCaption?.textContent.trim() || image.alt || "";
+    };
+
+    const openImage = (image) => {
+      trigger = image;
+      preview.src = image.currentSrc || image.src;
+      preview.alt = image.alt || "";
+      caption.textContent = imageCaption(image);
+      dialog.showModal();
+      document.body.classList.add("has-open-image-lightbox");
+      closeButton.focus();
+    };
+
+    images.forEach((image) => {
+      image.tabIndex = 0;
+      image.setAttribute("role", "button");
+      image.setAttribute(
+        "aria-label",
+        `Open image preview${image.alt ? `: ${image.alt}` : ""}`
+      );
+      image.addEventListener("click", (event) => {
+        event.preventDefault();
+        openImage(image);
+      });
+      image.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        openImage(image);
+      });
+    });
+
+    closeButton.addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    dialog.addEventListener("close", () => {
+      document.body.classList.remove("has-open-image-lightbox");
+      preview.removeAttribute("src");
+      trigger?.focus();
+      trigger = null;
+    });
+  })();
+</script>
+
+<script>
+  (() => {
+    const toc = document.querySelector(".article-toc");
+    if (!toc) return;
+
+    const links = Array.from(toc.querySelectorAll('a[href^="#"]'));
+    const headings = links
+      .map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
+      .filter(Boolean);
+
+    if (!links.length || !headings.length) return;
+
+    const setActive = (id) => {
+      links.forEach((link) => {
+        const isActive = decodeURIComponent(link.hash.slice(1)) === id;
+        link.classList.toggle("is-active", isActive);
+
+        if (isActive) {
+          link.setAttribute("aria-current", "location");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+    };
+
+    const initialId = decodeURIComponent(window.location.hash.slice(1));
+    setActive(headings.some((heading) => heading.id === initialId) ? initialId : headings[0].id);
+
+    links.forEach((link) => {
+      link.addEventListener("click", () => {
+        setActive(decodeURIComponent(link.hash.slice(1)));
+      });
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleHeading = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+
+        if (visibleHeading) setActive(visibleHeading.target.id);
+      },
+      { rootMargin: "-18% 0px -68% 0px" }
+    );
+
+    headings.forEach((heading) => observer.observe(heading));
+  })();
+</script>
+
 
 <script>
     let menu = document.getElementById('menu');
