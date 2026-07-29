@@ -10,7 +10,7 @@
 <meta name="description" content="An AI-powered fashion community application based on OpenHarmony.">
 <meta name="author" content="">
 <link rel="canonical" href="/projects/vibe/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.8872cb0ee86901f4e7ae43669a414126b26b95df9a8a38671239a8a4cd1a7437.css" integrity="sha256-iHLLDuhpAfTnrkNmmkFBJrJrld&#43;aijhnEjmopM0adDc=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.a2c340ddfbc58aa6dbe31b4f9bbcda9101092bf69111146b91f0acfb31ab9c6b.css" integrity="sha256-osNA3fvFiqbb4xtPm7zakQEJK/aRERRrkfCs&#43;zGrnGs=" rel="preload stylesheet" as="style">
 <link rel="icon" href="/img/logo-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/img/logo-16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/img/logo-32.png">
@@ -85,7 +85,9 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"><meta property="og:url" content="/projects/vibe/">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<script defer crossorigin="anonymous" src="/js/fuse.basic.min.d42fa2fe333d0ce3d9369962cba1da9b205e4fb3406d80fc89199c6766e8a666.js" integrity="sha256-1C&#43;i/jM9DOPZNpliy6HamyBeT7NAbYD8iRmcZ2bopmY="></script>
+<meta property="og:url" content="/projects/vibe/">
   <meta property="og:site_name" content="Yingrui Chen">
   <meta property="og:title" content="Vibe - AI Fashion Community">
   <meta property="og:description" content="An AI-powered fashion community application based on OpenHarmony.">
@@ -147,6 +149,16 @@
             <li>
                 <a href="/projects" title="Projects">
                     <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="/search" title="Search (Alt &#43; /)" accesskey=/>
+                    <span><svg class="menu-search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="/?assistant=open" title="Ask AI">
+                    <span><svg class="menu-assistant-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5c.5 4.6 2.4 6.5 7 7-4.6.5-6.5 2.4-7 7-.5-4.6-2.4-6.5-7-7 4.6-.5 6.5-2.4 7-7Z"></path><path d="M19 3v4M21 5h-4"></path></svg>Ask AI</span>
                 </a>
             </li>
         </ul>
@@ -311,7 +323,478 @@
       document.fonts.ready.then(fitImagesToText);
     }
   })();
+</script><dialog
+  class="instant-search"
+  id="instant-search"
+  aria-label="Search this site"
+  data-index-url="/index.json"
+  data-search-path="/search/">
+  <div class="instant-search__panel">
+    <header class="instant-search__header">
+      <svg class="instant-search__icon" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="m20 20-4-4"></path>
+      </svg>
+      <input
+        class="instant-search__input"
+        id="instant-search-input"
+        type="search"
+        placeholder="Search articles, research, and projects"
+        autocomplete="off"
+        spellcheck="false"
+        aria-controls="instant-search-results">
+      <button class="instant-search__close" type="button" aria-label="Close search">Esc</button>
+    </header>
+    <div class="instant-search__body">
+      <p class="instant-search__hint">Start typing to search across the site.</p>
+      <ol class="instant-search__results" id="instant-search-results"></ol>
+    </div>
+    <footer class="instant-search__footer" aria-hidden="true">
+      <span><kbd>↑</kbd><kbd>↓</kbd> Navigate</span>
+      <span><kbd>Enter</kbd> Open</span>
+      <span><kbd>Esc</kbd> Close</span>
+    </footer>
+  </div>
+</dialog>
+
+<script>
+  (() => {
+    const dialog = document.getElementById("instant-search");
+    const input = document.getElementById("instant-search-input");
+    const results = document.getElementById("instant-search-results");
+    const hint = dialog?.querySelector(".instant-search__hint");
+    const closeButton = dialog?.querySelector(".instant-search__close");
+    if (!dialog || !input || !results || typeof HTMLDialogElement === "undefined") return;
+
+    const searchPath = new URL(dialog.dataset.searchPath, window.location.origin).pathname.replace(/\/+$/, "");
+    const searchLinks = Array.from(document.querySelectorAll("#menu a")).filter((link) => {
+      return new URL(link.href, window.location.origin).pathname.replace(/\/+$/, "") === searchPath;
+    });
+
+    let fuse = null;
+    let indexPromise = null;
+    let activeIndex = -1;
+    let trigger = null;
+    let debounceTimer;
+
+    const setHint = (message, state = "") => {
+      hint.textContent = message;
+      hint.dataset.state = state;
+    };
+
+    const loadIndex = () => {
+      if (indexPromise) return indexPromise;
+
+      setHint("Loading search index…", "loading");
+      indexPromise = fetch(dialog.dataset.indexUrl)
+        .then((response) => {
+          if (!response.ok) throw new Error(`Search index failed: ${response.status}`);
+          return response.json();
+        })
+        .then((data) => {
+          if (typeof Fuse === "undefined") throw new Error("Fuse.js is unavailable");
+          fuse = new Fuse(data, {
+            distance: 100,
+            threshold: 0.36,
+            ignoreLocation: true,
+            minMatchCharLength: 2,
+            keys: ["title", "permalink", "summary", "content"]
+          });
+          setHint("Start typing to search across the site.");
+        })
+        .catch((error) => {
+          console.error(error);
+          setHint("Search is temporarily unavailable.", "error");
+          indexPromise = null;
+        });
+
+      return indexPromise;
+    };
+
+    const resultLinks = () => Array.from(results.querySelectorAll("a"));
+
+    const setActive = (index) => {
+      const links = resultLinks();
+      if (!links.length) {
+        activeIndex = -1;
+        return;
+      }
+
+      activeIndex = (index + links.length) % links.length;
+      links.forEach((link, linkIndex) => {
+        link.classList.toggle("is-active", linkIndex === activeIndex);
+      });
+      links[activeIndex].scrollIntoView({ block: "nearest" });
+    };
+
+    const sectionName = (permalink) => {
+      const section = new URL(permalink, window.location.origin)
+        .pathname.split("/")
+        .filter(Boolean)[0];
+      return section ? section.charAt(0).toUpperCase() + section.slice(1) : "Page";
+    };
+
+    const renderResults = (matches) => {
+      results.replaceChildren();
+      activeIndex = -1;
+
+      if (!matches.length) {
+        setHint(`No results for “${input.value.trim()}”.`, "empty");
+        return;
+      }
+
+      const fragment = document.createDocumentFragment();
+      matches.slice(0, 8).forEach(({ item }) => {
+        const listItem = document.createElement("li");
+        const link = document.createElement("a");
+        const meta = document.createElement("span");
+        const title = document.createElement("strong");
+        const summary = document.createElement("span");
+
+        link.href = item.permalink;
+        link.className = "instant-search__result";
+        meta.className = "instant-search__result-meta";
+        title.className = "instant-search__result-title";
+        summary.className = "instant-search__result-summary";
+
+        meta.textContent = sectionName(item.permalink);
+        title.textContent = item.title;
+        summary.textContent = item.summary || "";
+
+        link.append(meta, title);
+        if (summary.textContent) link.append(summary);
+        listItem.append(link);
+        fragment.append(listItem);
+      });
+
+      results.append(fragment);
+      setHint(`${matches.length} result${matches.length === 1 ? "" : "s"}`, "results");
+    };
+
+    const search = () => {
+      const query = input.value.trim();
+      if (!query) {
+        results.replaceChildren();
+        setHint("Start typing to search across the site.");
+        return;
+      }
+      if (!fuse) return;
+      renderResults(fuse.search(query, { limit: 8 }));
+    };
+
+    const openSearch = (source) => {
+      if (typeof Fuse === "undefined") {
+        window.location.href = dialog.dataset.searchPath;
+        return;
+      }
+
+      trigger = source || document.activeElement;
+      dialog.showModal();
+      document.body.classList.add("has-open-instant-search");
+      input.focus();
+      loadIndex().then(search);
+    };
+
+    const closeSearch = () => {
+      if (dialog.open) dialog.close();
+    };
+
+    searchLinks.forEach((link) => {
+      link.setAttribute("aria-haspopup", "dialog");
+      link.setAttribute("aria-controls", "instant-search");
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        openSearch(link);
+      });
+    });
+
+    input.addEventListener("input", () => {
+      window.clearTimeout(debounceTimer);
+      debounceTimer = window.setTimeout(search, 90);
+    });
+
+    input.addEventListener("keydown", (event) => {
+      const links = resultLinks();
+      if (event.key === "ArrowDown" && links.length) {
+        event.preventDefault();
+        setActive(activeIndex + 1);
+      } else if (event.key === "ArrowUp" && links.length) {
+        event.preventDefault();
+        setActive(activeIndex <= 0 ? links.length - 1 : activeIndex - 1);
+      } else if (event.key === "Enter" && activeIndex >= 0) {
+        event.preventDefault();
+        links[activeIndex].click();
+      }
+    });
+
+    results.addEventListener("mousemove", (event) => {
+      const link = event.target.closest(".instant-search__result");
+      if (!link) return;
+      setActive(resultLinks().indexOf(link));
+    });
+
+    closeButton.addEventListener("click", closeSearch);
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) closeSearch();
+    });
+    dialog.addEventListener("close", () => {
+      document.body.classList.remove("has-open-instant-search");
+      input.value = "";
+      results.replaceChildren();
+      setHint("Start typing to search across the site.");
+      trigger?.focus();
+      trigger = null;
+    });
+
+    document.addEventListener("keydown", (event) => {
+      const target = event.target;
+      const isTyping = target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target?.isContentEditable;
+      const commandShortcut = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k";
+      const slashShortcut = event.key === "/" && !isTyping && !event.metaKey && !event.ctrlKey && !event.altKey;
+
+      if (commandShortcut || slashShortcut) {
+        event.preventDefault();
+        if (!dialog.open) openSearch();
+      }
+    });
+  })();
 </script>
+<dialog
+  class="site-assistant"
+  id="site-assistant"
+  aria-label="Ask this site"
+  data-preview="true">
+  <div class="site-assistant__shell">
+    <header class="site-assistant__header">
+      <div class="site-assistant__identity">
+        <span class="site-assistant__mark" aria-hidden="true">
+          <img src="/img/ai-assistant-avatar.png" alt="">
+        </span>
+        <span>
+          <strong>Ask this site</strong>
+          <small><i aria-hidden="true"></i> Interface preview</small>
+        </span>
+      </div>
+      <button class="site-assistant__close" type="button" aria-label="Close assistant">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m6 6 12 12M18 6 6 18"></path>
+        </svg>
+      </button>
+    </header>
+
+    <div class="site-assistant__context">
+      <span>Current page</span>
+      <strong data-assistant-page-title>This page</strong>
+    </div>
+
+    <main class="site-assistant__body" aria-live="polite">
+      <section class="site-assistant__welcome">
+        <p class="site-assistant__eyebrow">A GUIDE TO THE WORK</p>
+        <h2>Find the thread between the projects.</h2>
+        <p class="site-assistant__intro">
+          Ask across research, projects, and writing. Future answers will stay grounded in material published on this site.
+        </p>
+
+        <div class="site-assistant__suggestions" aria-label="Suggested questions">
+          <button type="button" data-assistant-prompt="What connects Yingrui's current work?">
+            <span>What connects Yingrui's current work?</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+          </button>
+          <button type="button" data-assistant-prompt="Show me the 3D reconstruction work.">
+            <span>Show me the 3D reconstruction work.</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+          </button>
+          <button type="button" data-assistant-prompt="What happened at the Greater Bay Area camp?">
+            <span>What happened at the Greater Bay Area camp?</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+          </button>
+        </div>
+
+        <div class="site-assistant__scope" aria-label="Assistant scope">
+          <span><b>Research</b> papers and directions</span>
+          <span><b>Projects</b> systems and outcomes</span>
+          <span><b>Writing</b> experiences and reflections</span>
+        </div>
+      </section>
+
+      <section class="site-assistant__conversation" hidden>
+        <div class="site-assistant__message site-assistant__message--user">
+          <span>You</span>
+          <p data-assistant-question></p>
+        </div>
+
+        <div class="site-assistant__message site-assistant__message--assistant">
+          <div class="site-assistant__message-heading">
+            <span class="site-assistant__mini-mark" aria-hidden="true">
+              <img src="/img/ai-assistant-avatar.png" alt="">
+            </span>
+            <span>Site guide <small>Preview response</small></span>
+          </div>
+          <div class="site-assistant__thinking" data-assistant-thinking>
+            <i></i><i></i><i></i>
+          </div>
+          <div class="site-assistant__answer" data-assistant-answer hidden>
+            <p>
+              Thanks for asking! I’m still getting ready behind the scenes, but I’ll soon be able to help you explore Yingrui’s research, projects, and stories. See you soon.
+            </p>
+            <p class="site-assistant__preview-note">
+              In the meantime, everything currently available is just one search away.
+            </p>
+          </div>
+        </div>
+
+        <button class="site-assistant__new-question" type="button" data-assistant-reset>
+          Start a new question
+        </button>
+      </section>
+    </main>
+
+    <form class="site-assistant__composer">
+      <label for="site-assistant-input">Ask about this site</label>
+      <div class="site-assistant__composer-box">
+        <textarea
+          id="site-assistant-input"
+          rows="1"
+          maxlength="800"
+          placeholder="Ask about research, projects, or posts…"></textarea>
+        <button type="submit" aria-label="Preview answer">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m5 12 14-7-5 14-2.5-5.5L5 12Z"></path>
+            <path d="M11.5 13.5 19 5"></path>
+          </svg>
+        </button>
+      </div>
+      <p>Frontend preview · Nothing will be sent</p>
+    </form>
+  </div>
+</dialog>
+
+<script>
+  (() => {
+    const dialog = document.getElementById("site-assistant");
+    if (!dialog || typeof HTMLDialogElement === "undefined") return;
+
+    const triggers = Array.from(document.querySelectorAll("#menu a")).filter((link) => {
+      try {
+        return new URL(link.href, window.location.origin).searchParams.get("assistant") === "open";
+      } catch {
+        return false;
+      }
+    });
+    const closeButton = dialog.querySelector(".site-assistant__close");
+    const pageTitle = dialog.querySelector("[data-assistant-page-title]");
+    const welcome = dialog.querySelector(".site-assistant__welcome");
+    const conversation = dialog.querySelector(".site-assistant__conversation");
+    const form = dialog.querySelector(".site-assistant__composer");
+    const input = dialog.querySelector("#site-assistant-input");
+    const question = dialog.querySelector("[data-assistant-question]");
+    const thinking = dialog.querySelector("[data-assistant-thinking]");
+    const answer = dialog.querySelector("[data-assistant-answer]");
+    const resetButton = dialog.querySelector("[data-assistant-reset]");
+    let trigger = null;
+    let previewTimer = null;
+
+    pageTitle.textContent = document.title
+      .split("|")[0]
+      .trim() || "This page";
+
+    const autoSizeInput = () => {
+      input.style.height = "auto";
+      input.style.height = `${Math.min(input.scrollHeight, 120)}px`;
+    };
+
+    const openAssistant = (source) => {
+      trigger = source || document.activeElement;
+      dialog.showModal();
+      document.body.classList.add("has-open-site-assistant");
+      window.setTimeout(() => input.focus(), 80);
+    };
+
+    const closeAssistant = () => {
+      if (dialog.open) dialog.close();
+    };
+
+    const showDemo = (prompt) => {
+      const cleanPrompt = prompt.trim();
+      if (!cleanPrompt) return;
+
+      window.clearTimeout(previewTimer);
+      question.textContent = cleanPrompt;
+      welcome.hidden = true;
+      conversation.hidden = false;
+      thinking.hidden = false;
+      answer.hidden = true;
+      input.value = "";
+      autoSizeInput();
+      dialog.querySelector(".site-assistant__body").scrollTop = 0;
+
+      previewTimer = window.setTimeout(() => {
+        thinking.hidden = true;
+        answer.hidden = false;
+      }, 650);
+    };
+
+    const resetConversation = () => {
+      window.clearTimeout(previewTimer);
+      conversation.hidden = true;
+      welcome.hidden = false;
+      thinking.hidden = false;
+      answer.hidden = true;
+      input.value = "";
+      autoSizeInput();
+      dialog.querySelector(".site-assistant__body").scrollTop = 0;
+      input.focus();
+    };
+
+    triggers.forEach((link) => {
+      link.setAttribute("aria-haspopup", "dialog");
+      link.setAttribute("aria-controls", "site-assistant");
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        openAssistant(link);
+      });
+    });
+
+    dialog.querySelectorAll("[data-assistant-prompt]").forEach((button) => {
+      button.addEventListener("click", () => showDemo(button.dataset.assistantPrompt));
+    });
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      showDemo(input.value);
+    });
+
+    input.addEventListener("input", autoSizeInput);
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        form.requestSubmit();
+      }
+    });
+
+    resetButton.addEventListener("click", resetConversation);
+    closeButton.addEventListener("click", closeAssistant);
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) closeAssistant();
+    });
+    dialog.addEventListener("close", () => {
+      window.clearTimeout(previewTimer);
+      document.body.classList.remove("has-open-site-assistant");
+      trigger?.focus();
+      trigger = null;
+    });
+
+    const initialUrl = new URL(window.location.href);
+    if (initialUrl.searchParams.get("assistant") === "open") {
+      initialUrl.searchParams.delete("assistant");
+      window.history.replaceState({}, "", `${initialUrl.pathname}${initialUrl.search}${initialUrl.hash}`);
+      openAssistant();
+    }
+  })();
+</script>
+
 
 <script>
   (() => {

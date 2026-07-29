@@ -128,5 +128,7 @@
     <loc>/links/</loc>
   </url><url>
     <loc>/news/</loc>
+  </url><url>
+    <loc>/search/</loc>
   </url>
 </urlset>
