@@ -2,52 +2,52 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Categories on Yingrui Chen</title>
-    <link>/categories/</link>
+    <link>https://www.yruichen.net/categories/</link>
     <description>Recent content in Categories on Yingrui Chen</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Wed, 29 Jul 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://www.yruichen.net/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Experiences</title>
-      <link>/categories/experiences/</link>
+      <link>https://www.yruichen.net/categories/experiences/</link>
       <pubDate>Sun, 19 Jul 2026 00:00:00 +0000</pubDate>
-      <guid>/categories/experiences/</guid>
+      <guid>https://www.yruichen.net/categories/experiences/</guid>
       <description></description>
     </item>
     <item>
       <title>Milestones</title>
-      <link>/categories/milestones/</link>
+      <link>https://www.yruichen.net/categories/milestones/</link>
       <pubDate>Sun, 19 Jul 2026 00:00:00 +0000</pubDate>
-      <guid>/categories/milestones/</guid>
+      <guid>https://www.yruichen.net/categories/milestones/</guid>
       <description></description>
     </item>
     <item>
       <title>Projects</title>
-      <link>/categories/projects/</link>
+      <link>https://www.yruichen.net/categories/projects/</link>
       <pubDate>Thu, 09 Jul 2026 00:00:00 +0000</pubDate>
-      <guid>/categories/projects/</guid>
+      <guid>https://www.yruichen.net/categories/projects/</guid>
       <description></description>
     </item>
     <item>
       <title>安全</title>
-      <link>/categories/%E5%AE%89%E5%85%A8/</link>
+      <link>https://www.yruichen.net/categories/%E5%AE%89%E5%85%A8/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
-      <guid>/categories/%E5%AE%89%E5%85%A8/</guid>
+      <guid>https://www.yruichen.net/categories/%E5%AE%89%E5%85%A8/</guid>
       <description></description>
     </item>
     <item>
       <title>机器学习</title>
-      <link>/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</link>
+      <link>https://www.yruichen.net/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
-      <guid>/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</guid>
+      <guid>https://www.yruichen.net/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</guid>
       <description></description>
     </item>
     <item>
       <title>几何</title>
-      <link>/categories/%E5%87%A0%E4%BD%95/</link>
+      <link>https://www.yruichen.net/categories/%E5%87%A0%E4%BD%95/</link>
       <pubDate>Fri, 08 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>/categories/%E5%87%A0%E4%BD%95/</guid>
+      <guid>https://www.yruichen.net/categories/%E5%87%A0%E4%BD%95/</guid>
       <description></description>
     </item>
   </channel>

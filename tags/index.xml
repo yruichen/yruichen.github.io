@@ -2,157 +2,157 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on Yingrui Chen</title>
-    <link>/tags/</link>
+    <link>https://www.yruichen.net/tags/</link>
     <description>Recent content in Tags on Yingrui Chen</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Wed, 29 Jul 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://www.yruichen.net/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Greater Bay Area</title>
-      <link>/tags/greater-bay-area/</link>
+      <link>https://www.yruichen.net/tags/greater-bay-area/</link>
       <pubDate>Sun, 19 Jul 2026 00:00:00 +0000</pubDate>
-      <guid>/tags/greater-bay-area/</guid>
+      <guid>https://www.yruichen.net/tags/greater-bay-area/</guid>
       <description></description>
     </item>
     <item>
       <title>Hong Kong</title>
-      <link>/tags/hong-kong/</link>
+      <link>https://www.yruichen.net/tags/hong-kong/</link>
       <pubDate>Sun, 19 Jul 2026 00:00:00 +0000</pubDate>
-      <guid>/tags/hong-kong/</guid>
+      <guid>https://www.yruichen.net/tags/hong-kong/</guid>
       <description></description>
     </item>
     <item>
       <title>Innovation and Entrepreneurship</title>
-      <link>/tags/innovation-and-entrepreneurship/</link>
+      <link>https://www.yruichen.net/tags/innovation-and-entrepreneurship/</link>
       <pubDate>Sun, 19 Jul 2026 00:00:00 +0000</pubDate>
-      <guid>/tags/innovation-and-entrepreneurship/</guid>
+      <guid>https://www.yruichen.net/tags/innovation-and-entrepreneurship/</guid>
       <description></description>
     </item>
     <item>
       <title>AI</title>
-      <link>/tags/ai/</link>
+      <link>https://www.yruichen.net/tags/ai/</link>
       <pubDate>Thu, 09 Jul 2026 00:00:00 +0000</pubDate>
-      <guid>/tags/ai/</guid>
+      <guid>https://www.yruichen.net/tags/ai/</guid>
       <description></description>
     </item>
     <item>
       <title>Competition</title>
-      <link>/tags/competition/</link>
+      <link>https://www.yruichen.net/tags/competition/</link>
       <pubDate>Thu, 09 Jul 2026 00:00:00 +0000</pubDate>
-      <guid>/tags/competition/</guid>
+      <guid>https://www.yruichen.net/tags/competition/</guid>
       <description></description>
     </item>
     <item>
       <title>Marketing Hub</title>
-      <link>/tags/marketing-hub/</link>
+      <link>https://www.yruichen.net/tags/marketing-hub/</link>
       <pubDate>Thu, 09 Jul 2026 00:00:00 +0000</pubDate>
-      <guid>/tags/marketing-hub/</guid>
+      <guid>https://www.yruichen.net/tags/marketing-hub/</guid>
       <description></description>
     </item>
     <item>
       <title>3D Reconstruction</title>
-      <link>/tags/3d-reconstruction/</link>
+      <link>https://www.yruichen.net/tags/3d-reconstruction/</link>
       <pubDate>Wed, 08 Jul 2026 00:00:00 +0000</pubDate>
-      <guid>/tags/3d-reconstruction/</guid>
+      <guid>https://www.yruichen.net/tags/3d-reconstruction/</guid>
       <description></description>
     </item>
     <item>
       <title>Project Delivery</title>
-      <link>/tags/project-delivery/</link>
+      <link>https://www.yruichen.net/tags/project-delivery/</link>
       <pubDate>Wed, 08 Jul 2026 00:00:00 +0000</pubDate>
-      <guid>/tags/project-delivery/</guid>
+      <guid>https://www.yruichen.net/tags/project-delivery/</guid>
       <description></description>
     </item>
     <item>
       <title>XIOPM</title>
-      <link>/tags/xiopm/</link>
+      <link>https://www.yruichen.net/tags/xiopm/</link>
       <pubDate>Wed, 08 Jul 2026 00:00:00 +0000</pubDate>
-      <guid>/tags/xiopm/</guid>
+      <guid>https://www.yruichen.net/tags/xiopm/</guid>
       <description></description>
     </item>
     <item>
       <title>HTML</title>
-      <link>/tags/html/</link>
+      <link>https://www.yruichen.net/tags/html/</link>
       <pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate>
-      <guid>/tags/html/</guid>
+      <guid>https://www.yruichen.net/tags/html/</guid>
       <description></description>
     </item>
     <item>
       <title>MindSpore</title>
-      <link>/tags/mindspore/</link>
+      <link>https://www.yruichen.net/tags/mindspore/</link>
       <pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate>
-      <guid>/tags/mindspore/</guid>
+      <guid>https://www.yruichen.net/tags/mindspore/</guid>
       <description></description>
     </item>
     <item>
       <title>Multi-Agent System</title>
-      <link>/tags/multi-agent-system/</link>
+      <link>https://www.yruichen.net/tags/multi-agent-system/</link>
       <pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate>
-      <guid>/tags/multi-agent-system/</guid>
+      <guid>https://www.yruichen.net/tags/multi-agent-system/</guid>
       <description></description>
     </item>
     <item>
       <title>OpenHarmony</title>
-      <link>/tags/openharmony/</link>
+      <link>https://www.yruichen.net/tags/openharmony/</link>
       <pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate>
-      <guid>/tags/openharmony/</guid>
+      <guid>https://www.yruichen.net/tags/openharmony/</guid>
       <description></description>
     </item>
     <item>
       <title>Python</title>
-      <link>/tags/python/</link>
+      <link>https://www.yruichen.net/tags/python/</link>
       <pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate>
-      <guid>/tags/python/</guid>
+      <guid>https://www.yruichen.net/tags/python/</guid>
       <description></description>
     </item>
     <item>
       <title>IEEE</title>
-      <link>/tags/ieee/</link>
+      <link>https://www.yruichen.net/tags/ieee/</link>
       <pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
-      <guid>/tags/ieee/</guid>
+      <guid>https://www.yruichen.net/tags/ieee/</guid>
       <description></description>
     </item>
     <item>
       <title>PyTorch</title>
-      <link>/tags/pytorch/</link>
+      <link>https://www.yruichen.net/tags/pytorch/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
-      <guid>/tags/pytorch/</guid>
+      <guid>https://www.yruichen.net/tags/pytorch/</guid>
       <description></description>
     </item>
     <item>
       <title>差分隐私</title>
-      <link>/tags/%E5%B7%AE%E5%88%86%E9%9A%90%E7%A7%81/</link>
+      <link>https://www.yruichen.net/tags/%E5%B7%AE%E5%88%86%E9%9A%90%E7%A7%81/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
-      <guid>/tags/%E5%B7%AE%E5%88%86%E9%9A%90%E7%A7%81/</guid>
+      <guid>https://www.yruichen.net/tags/%E5%B7%AE%E5%88%86%E9%9A%90%E7%A7%81/</guid>
       <description></description>
     </item>
     <item>
       <title>隐私保护</title>
-      <link>/tags/%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4/</link>
+      <link>https://www.yruichen.net/tags/%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
-      <guid>/tags/%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4/</guid>
+      <guid>https://www.yruichen.net/tags/%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4/</guid>
       <description></description>
     </item>
     <item>
       <title>仿射几何</title>
-      <link>/tags/%E4%BB%BF%E5%B0%84%E5%87%A0%E4%BD%95/</link>
+      <link>https://www.yruichen.net/tags/%E4%BB%BF%E5%B0%84%E5%87%A0%E4%BD%95/</link>
       <pubDate>Fri, 08 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>/tags/%E4%BB%BF%E5%B0%84%E5%87%A0%E4%BD%95/</guid>
+      <guid>https://www.yruichen.net/tags/%E4%BB%BF%E5%B0%84%E5%87%A0%E4%BD%95/</guid>
       <description></description>
     </item>
     <item>
       <title>线性代数</title>
-      <link>/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/</link>
+      <link>https://www.yruichen.net/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/</link>
       <pubDate>Fri, 08 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/</guid>
+      <guid>https://www.yruichen.net/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/</guid>
       <description></description>
     </item>
     <item>
       <title>计算机图形学</title>
-      <link>/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/</link>
+      <link>https://www.yruichen.net/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/</link>
       <pubDate>Fri, 08 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/</guid>
+      <guid>https://www.yruichen.net/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/</guid>
       <description></description>
     </item>
   </channel>

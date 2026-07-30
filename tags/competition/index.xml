@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Competition on Yingrui Chen</title>
-    <link>/tags/competition/</link>
+    <link>https://www.yruichen.net/tags/competition/</link>
     <description>Recent content in Competition on Yingrui Chen</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Thu, 09 Jul 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/competition/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://www.yruichen.net/tags/competition/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Marketing Hub Won Gold at the Guangzhou TeamOne AI Technology Challenge</title>
-      <link>/blog/marketing-hub-teamone-gold/</link>
+      <link>https://www.yruichen.net/blog/marketing-hub-teamone-gold/</link>
       <pubDate>Thu, 09 Jul 2026 00:00:00 +0000</pubDate>
-      <guid>/blog/marketing-hub-teamone-gold/</guid>
+      <guid>https://www.yruichen.net/blog/marketing-hub-teamone-gold/</guid>
       <description>Our three-person team won the Gold Award at the Guangzhou TeamOne AI Technology Challenge for Marketing Hub, with a RMB 50,000 prize.</description>
     </item>
   </channel>

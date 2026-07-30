@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>仿射几何 on Yingrui Chen</title>
-    <link>/tags/%E4%BB%BF%E5%B0%84%E5%87%A0%E4%BD%95/</link>
+    <link>https://www.yruichen.net/tags/%E4%BB%BF%E5%B0%84%E5%87%A0%E4%BD%95/</link>
     <description>Recent content in 仿射几何 on Yingrui Chen</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Fri, 08 Mar 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/%E4%BB%BF%E5%B0%84%E5%87%A0%E4%BD%95/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://www.yruichen.net/tags/%E4%BB%BF%E5%B0%84%E5%87%A0%E4%BD%95/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>仿射变换入门：从坐标、矩阵到椭圆与不变量</title>
-      <link>/blog/affine_geometry/</link>
+      <link>https://www.yruichen.net/blog/affine_geometry/</link>
       <pubDate>Fri, 08 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>/blog/affine_geometry/</guid>
+      <guid>https://www.yruichen.net/blog/affine_geometry/</guid>
       <description>从坐标表示、线性方程组和矩阵出发，系统解释仿射变换的定义、几何不变量、直线与面积的变换规律，并用椭圆和图形编程示例说明它为什么实用。</description>
     </item>
   </channel>

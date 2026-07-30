@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Innovation and Entrepreneurship on Yingrui Chen</title>
-    <link>/tags/innovation-and-entrepreneurship/</link>
+    <link>https://www.yruichen.net/tags/innovation-and-entrepreneurship/</link>
     <description>Recent content in Innovation and Entrepreneurship on Yingrui Chen</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Wed, 29 Jul 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/innovation-and-entrepreneurship/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://www.yruichen.net/tags/innovation-and-entrepreneurship/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Greater Bay Area Summer Camp: Across Cities and Industries—and Honoured as an Outstanding Camper</title>
-      <link>/blog/greater-bay-area-summer-camp/</link>
+      <link>https://www.yruichen.net/blog/greater-bay-area-summer-camp/</link>
       <pubDate>Sun, 19 Jul 2026 00:00:00 +0000</pubDate>
-      <guid>/blog/greater-bay-area-summer-camp/</guid>
+      <guid>https://www.yruichen.net/blog/greater-bay-area-summer-camp/</guid>
       <description>Universities, city streets, factory floors, a final roadshow—and the people who made the journey matter.</description>
     </item>
   </channel>

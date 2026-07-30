@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>安全 on Yingrui Chen</title>
-    <link>/categories/%E5%AE%89%E5%85%A8/</link>
+    <link>https://www.yruichen.net/categories/%E5%AE%89%E5%85%A8/</link>
     <description>Recent content in 安全 on Yingrui Chen</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Tue, 08 Jul 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/categories/%E5%AE%89%E5%85%A8/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://www.yruichen.net/categories/%E5%AE%89%E5%85%A8/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>差分隐私基础：从数学定义到机器学习实践</title>
-      <link>/blog/dp_learn/</link>
+      <link>https://www.yruichen.net/blog/dp_learn/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
-      <guid>/blog/dp_learn/</guid>
+      <guid>https://www.yruichen.net/blog/dp_learn/</guid>
       <description>系统梳理差分隐私的定义、隐私预算、敏感度、拉普拉斯机制、高斯机制、指数机制与 DP-SGD，并给出 PyTorch/Opacus 实践建议和常见调参清单。</description>
     </item>
   </channel>

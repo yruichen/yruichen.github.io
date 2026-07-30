@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Project Delivery on Yingrui Chen</title>
-    <link>/tags/project-delivery/</link>
+    <link>https://www.yruichen.net/tags/project-delivery/</link>
     <description>Recent content in Project Delivery on Yingrui Chen</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Wed, 08 Jul 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/project-delivery/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://www.yruichen.net/tags/project-delivery/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>My First Delivered Project: Rocket 3D Reconstruction System at XIOPM</title>
-      <link>/blog/xioptics-rocket-3d-reconstruction-delivery/</link>
+      <link>https://www.yruichen.net/blog/xioptics-rocket-3d-reconstruction-delivery/</link>
       <pubDate>Wed, 08 Jul 2026 00:00:00 +0000</pubDate>
-      <guid>/blog/xioptics-rocket-3d-reconstruction-delivery/</guid>
+      <guid>https://www.yruichen.net/blog/xioptics-rocket-3d-reconstruction-delivery/</guid>
       <description>I completed the on-site delivery of the Rocket 3D Reconstruction System at the Xi&amp;#39;an Institute of Optics and Precision Mechanics, Chinese Academy of Sciences.</description>
     </item>
   </channel>

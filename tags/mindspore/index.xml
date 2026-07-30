@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>MindSpore on Yingrui Chen</title>
-    <link>/tags/mindspore/</link>
+    <link>https://www.yruichen.net/tags/mindspore/</link>
     <description>Recent content in MindSpore on Yingrui Chen</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Sat, 23 May 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/mindspore/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://www.yruichen.net/tags/mindspore/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Intelligent Government Service Assistant</title>
-      <link>/projects/intelligent-government-assistant/</link>
+      <link>https://www.yruichen.net/projects/intelligent-government-assistant/</link>
       <pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate>
-      <guid>/projects/intelligent-government-assistant/</guid>
+      <guid>https://www.yruichen.net/projects/intelligent-government-assistant/</guid>
       <description>A Multi-Agent System for digital government tasks.</description>
     </item>
   </channel>

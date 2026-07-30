@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>HTML on Yingrui Chen</title>
-    <link>/tags/html/</link>
+    <link>https://www.yruichen.net/tags/html/</link>
     <description>Recent content in HTML on Yingrui Chen</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Sat, 23 May 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/html/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://www.yruichen.net/tags/html/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Vibe - AI Fashion Community</title>
-      <link>/projects/vibe/</link>
+      <link>https://www.yruichen.net/projects/vibe/</link>
       <pubDate>Sat, 23 May 2026 00:00:00 +0000</pubDate>
-      <guid>/projects/vibe/</guid>
+      <guid>https://www.yruichen.net/projects/vibe/</guid>
       <description>An AI-powered fashion community application based on OpenHarmony.</description>
     </item>
   </channel>
