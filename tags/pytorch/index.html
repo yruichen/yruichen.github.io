@@ -10,7 +10,7 @@
 <meta name="description" content="Yingrui Chen (陈英锐) is an undergraduate researcher at Guangdong University of Technology exploring embodied AI, AI for Science, biomedical imaging, and 3D computer vision.">
 <meta name="author" content="Yingrui Chen">
 <link rel="canonical" href="https://www.yruichen.net/tags/pytorch/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.1598ae2d6e375888379ce9f6880beac7864a42b035ee0a878539ce9e5be21945.css" integrity="sha256-FZiuLW43WIg3nOn2iAvqx4ZKQrA17gqHhTnOnlviGUU=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2a0d561e119a0b501a9ac23b22c893128f5934d108d0c7b3d61dcdb7feeb5a6d.css" integrity="sha256-Kg1WHhGaC1AamsI7IsiTEo9ZNNEI0Mez1h3Nt/7rWm0=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://www.yruichen.net/img/logo-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="https://www.yruichen.net/img/logo-16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://www.yruichen.net/img/logo-32.png">
@@ -542,7 +542,7 @@ $\epsilon$ 控制输出分布的最大可区分程度。越小，隐私越强，
   id="site-assistant"
   aria-label="Yingrui Assistant"
   data-mode="live"
-  data-api-url="/api/assistant/chat">
+  data-api-url="https://www.yruichen.net/api/assistant/chat">
   <div class="site-assistant__shell">
     <header class="site-assistant__header">
       <div class="site-assistant__identity">
@@ -600,39 +600,10 @@ $\epsilon$ 控制输出分布的最大可区分程度。越小，隐私越强，
       </section>
 
       <section class="site-assistant__conversation" hidden>
-        <div class="site-assistant__message site-assistant__message--user">
-          <span>You</span>
-          <p data-assistant-question></p>
-        </div>
-
-        <div class="site-assistant__message site-assistant__message--assistant">
-          <div class="site-assistant__message-heading">
-            <span class="site-assistant__mini-mark" aria-hidden="true">
-              <img src="/img/ai-assistant-avatar.png" alt="">
-            </span>
-            <span>
-              Yingrui Assistant
-              <small data-assistant-response-label>Site guide</small>
-            </span>
-          </div>
-
-          <div class="site-assistant__thinking" data-assistant-thinking>
-            <i></i><i></i><i></i>
-          </div>
-
-          <div class="site-assistant__answer" data-assistant-answer hidden>
-            <div class="site-assistant__answer-text" data-assistant-answer-text></div>
-            <section class="site-assistant__sources" data-assistant-sources hidden>
-              <h3>Sources</h3>
-              <ol data-assistant-source-list></ol>
-            </section>
-          </div>
-
-          <p class="site-assistant__error" data-assistant-error hidden></p>
-        </div>
+        <div class="site-assistant__messages" data-assistant-messages></div>
 
         <button class="site-assistant__new-question" type="button" data-assistant-reset>
-          Start a new question
+          Start a new conversation
         </button>
       </section>
     </main>
@@ -659,8 +630,43 @@ $\epsilon$ 控制输出分布的最大可区分程度。越小，隐私越强，
       </p>
     </form>
   </div>
+
+  <template data-assistant-user-template>
+    <article class="site-assistant__message site-assistant__message--user">
+      <span>You</span>
+      <p data-assistant-question></p>
+    </article>
+  </template>
+
+  <template data-assistant-response-template>
+    <article class="site-assistant__message site-assistant__message--assistant">
+      <div class="site-assistant__message-heading">
+        <span class="site-assistant__mini-mark" aria-hidden="true">
+          <img src="/img/ai-assistant-avatar.png" alt="">
+        </span>
+        <span>
+          Yingrui Assistant
+          <small>Grounded answer</small>
+        </span>
+      </div>
+
+      <div class="site-assistant__thinking" data-assistant-thinking>
+        <i></i><i></i><i></i>
+      </div>
+
+      <div class="site-assistant__answer" data-assistant-answer hidden>
+        <div class="site-assistant__answer-text" data-assistant-answer-text></div>
+        <section class="site-assistant__sources" data-assistant-sources hidden>
+          <h3>Sources</h3>
+          <ol data-assistant-source-list></ol>
+        </section>
+      </div>
+
+      <p class="site-assistant__error" data-assistant-error hidden></p>
+    </article>
+  </template>
 </dialog>
-<script defer crossorigin="anonymous" src="/js/assistant.361556280faa3e7106960ccc81ca5905d5d0f88da21d5ac96c725d9c2d011b60.js" integrity="sha256-NhVWKA&#43;qPnEGlgzMgcpZBdXQ&#43;I2iHVrJbHJdnC0BG2A="></script>
+<script defer crossorigin="anonymous" src="/js/assistant.f2a4abd47f5f90cbe0c49f997f7b8879066fb8a72596f0f28c8795670baba425.js" integrity="sha256-8qSr1H9fkMvgxJ&#43;Zf3uIeQZvuKcllvDyjIeVZwurpCU="></script>
 
 
 <script>
