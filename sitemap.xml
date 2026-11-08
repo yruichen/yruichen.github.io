@@ -47,18 +47,6 @@
     <loc>https://www.yruichen.net/categories/projects/</loc>
     <lastmod>2026-07-09T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://www.yruichen.net/tags/3d-reconstruction/</loc>
-    <lastmod>2026-07-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://www.yruichen.net/blog/xioptics-rocket-3d-reconstruction-delivery/</loc>
-    <lastmod>2026-07-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://www.yruichen.net/tags/project-delivery/</loc>
-    <lastmod>2026-07-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://www.yruichen.net/tags/xiopm/</loc>
-    <lastmod>2026-07-08T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://www.yruichen.net/tags/html/</loc>
     <lastmod>2026-05-23T00:00:00+00:00</lastmod>
   </url><url>
@@ -82,15 +70,6 @@
   </url><url>
     <loc>https://www.yruichen.net/projects/vibe/</loc>
     <lastmod>2026-05-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://www.yruichen.net/tags/ieee/</loc>
-    <lastmod>2026-04-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://www.yruichen.net/research/ieee_jbhi/</loc>
-    <lastmod>2026-04-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://www.yruichen.net/research/</loc>
-    <lastmod>2026-04-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://www.yruichen.net/tags/pytorch/</loc>
     <lastmod>2025-07-08T00:00:00+00:00</lastmod>
@@ -128,6 +107,8 @@
     <loc>https://www.yruichen.net/links/</loc>
   </url><url>
     <loc>https://www.yruichen.net/news/</loc>
+  </url><url>
+    <loc>https://www.yruichen.net/research/</loc>
   </url><url>
     <loc>https://www.yruichen.net/search/</loc>
   </url>
